@@ -19,6 +19,9 @@
 //change this to only allow local server
 header("Access-Control-Allow-Origin: *");
 
+//install hook inside
+require_once('wps-database.php');
+
 add_action('rest_api_init', 'register_endpoint_handler');
 
 function register_endpoint_handler() {
