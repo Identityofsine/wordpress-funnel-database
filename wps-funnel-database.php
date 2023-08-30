@@ -2,7 +2,7 @@
 /*
 * Plugin Name:       RESTful Funnel Database
 * Description:       Creates a REST API for the funnel database, allows for POST requests to submit data into a database
-* Version:           1.0
+* Version:           1.2
 * Requires at least: 5.2
 * Requires PHP:      7.2
 * Author:            Kevin Erdogan
@@ -24,6 +24,8 @@ require_once('wps-database.php');
 
 add_action('rest_api_init', 'register_endpoint_handler');
 
-function register_endpoint_handler() {
-
+function register_endpoint_handler_funnel() {
 }
+
+
+
