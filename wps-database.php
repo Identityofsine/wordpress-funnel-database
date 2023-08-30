@@ -2,6 +2,7 @@
 
 //run function on install
 register_activation_hook(__FILE__, 'wps_funnel_database_install');
+register_uninstall_hook(__FILE__, 'wps_funnel_database_uninstall');
 
 
 function wps_funnel_database_install() {
@@ -23,4 +24,12 @@ function wps_funnel_database_install() {
 
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	dbDelta( $sql );
+}
+
+//function that removes the table from the database on uninstall
+
+function wps_funnel_database_uninstall() {
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'funnel_database';
+	$wpdb->query("DROP TABLE IF EXISTS $table_name");
 }
