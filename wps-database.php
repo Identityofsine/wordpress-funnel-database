@@ -19,8 +19,8 @@ function wps_funnel_database_install() {
 		id mediumint(9) NOT NULL AUTO_INCREMENT,
 		funnel_id mediumint(9) NOT NULL,
 		funnel_message varchar(255) NOT NULL,
-		funnel_email varchar(255),
-		funnel_phone varchar(255),
+		funnel_email varchar(255) ,
+		funnel_phone varchar(255) ,
 		funnel_date timestamp DEFAULT CURRENT_TIMESTAMP,
 		PRIMARY KEY (id)
 	) $charset_collate;";
@@ -35,3 +35,19 @@ function wps_funnel_database_uninstall() {
 	$table_name = $wpdb->prefix . 'funnel_database';
 	$wpdb->query("DROP TABLE IF EXISTS $table_name");
 }
+
+
+//submi
+function wps_db_submit_phone_number($funnel_id, $funnel_message, $phone_number) {
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'funnel_database';
+	$wpdb->insert(
+		$table_name,
+		array(
+			'funnel_id' => $funnel_id,
+			'funnel_message' => $funnel_message,
+			'funnel_phone' => $phone_number
+		)
+	);
+}
+
