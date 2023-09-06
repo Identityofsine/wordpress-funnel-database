@@ -1,25 +1,15 @@
 <?php
 
+require_once('wps-database.php');
+require_once('wps-response.php');
 
-//create a response type that allows my functions to have a same return type
-class DatabaseResponse {
-	public $status;
-	public $message;
-
-
-	//constructor that takes in a status and a message
-	public function __construct($status = '', $message = '') {
-		$this->status = $status;
-		$this->message = $message;
-	}
-}
 
 function wps_rest_handle_request($wp) {
 
 	//check if number or email is set -- then call function responsible for database
+	$response = new DatabaseResponse('fail', 'No email or number set');		
 	try {
 		//create a variable that holds the response
-		$response = new DatabaseResponse('success', 'success');		
 		if (isset($wp['number'])) {
 			wps_db_submit_phone_number($wp['funnel_id'], $wp['funnel_message'], $wp['number']);
 		} else if (isset($wp['email'])) {
@@ -33,7 +23,7 @@ function wps_rest_handle_request($wp) {
 		exit();
 	}
 
-	wp_send_json(['status' => 'success']);
+	wp_send_json(['status' => $response->status, 'message' => $response->message]);
 	exit();
 }
 
