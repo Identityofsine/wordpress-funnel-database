@@ -100,3 +100,38 @@ function wps_db_submit_email($funnel_id, $funnel_message, $email) {
 	return new DatabaseResponse('success', 'Email submitted');
 }
 
+// submit a new funnel_element object into funnel_element table
+function wps_db_submit_funnel_element($funnel_obj) : DatabaseResponse { 
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'funnel_object_database';
+	try {
+		//change elements to false
+		$wpdb->update(
+			$table_name,
+			array(
+				'active' => false
+			),
+			array(
+				'active' => true
+			)
+		);
+
+		$db_response = $wpdb->insert(
+			$table_name,
+			array(
+				'funnel_id' => $funnel_obj->funnel_id,
+				'funnel_message' => $funnel_obj->funnel_message,
+				'active' => $funnel_obj->active
+			)
+		);
+		if($db_response === false) {
+			throw new Exception('Database error');
+		}
+		
+
+
+	} catch (Exception $e) {
+		return new DatabaseResponse('error', $e->getMessage());
+	}
+	return new DatabaseResponse('success', 'Funnel element submitted');
+}
