@@ -22,6 +22,7 @@ header("Access-Control-Allow-Origin: *");
 //install hook inside
 require_once('wps-database.php');
 require_once('wps-requests.php');
+require_once('wps-settings.php');
 
 add_action('rest_api_init', 'register_endpoint_handler_funnel');
 
