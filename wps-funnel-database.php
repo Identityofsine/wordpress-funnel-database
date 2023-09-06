@@ -21,11 +21,19 @@ header("Access-Control-Allow-Origin: *");
 
 //install hook inside
 require_once('wps-database.php');
+require_once('wps-requests.php');
 
-add_action('rest_api_init', 'register_endpoint_handler');
+add_action('rest_api_init', 'register_endpoint_handler_funnel');
 
 function register_endpoint_handler_funnel() {
+	//add two POST requests: 'submitNumber', 'submitEmail'
+	add_action( 'rest_pre_serve_request', function () {
+		header( 'Access-Control-Allow-Headers: Authorization, Content-Type, X-WP-Wpml-Language', true );
+		header("Access-Control-Allow-Origin: *");
+	});
+	register_rest_route( 'funnel', '/submit', array(
+		'methods' => 'POST',
+		'callback' => 'wps_rest_handle_request',
+	) );
 }
-
-
 
