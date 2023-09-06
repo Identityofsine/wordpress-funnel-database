@@ -11,9 +11,9 @@ function wps_rest_handle_request($wp) {
 	try {
 		//create a variable that holds the response
 		if (isset($wp['number'])) {
-			wps_db_submit_phone_number($wp['funnel_id'], $wp['funnel_message'], $wp['number']);
+			$response = wps_db_submit_phone_number($wp['funnel_id'], $wp['funnel_message'], $wp['number']);
 		} else if (isset($wp['email'])) {
-			wps_db_submit_email($wp['funnel_id'], $wp['funnel_message'], $wp['email']);
+			$response = wps_db_submit_email($wp['funnel_id'], $wp['funnel_message'], $wp['email']);
 		} else {
 			throw new Exception('No number or email set');
 		}

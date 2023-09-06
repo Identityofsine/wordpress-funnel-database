@@ -38,30 +38,41 @@ function wps_funnel_database_uninstall() {
 
 
 //submi
-function wps_db_submit_phone_number($funnel_id, $funnel_message, $phone_number) {
+function wps_db_submit_phone_number($funnel_id, $funnel_message, $phone_number) : DatabaseResponse {
+
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_database';
-	$wpdb->insert(
-		$table_name,
-		array(
-			'funnel_id' => $funnel_id,
-			'funnel_message' => $funnel_message,
-			'funnel_phone' => $phone_number
-		)
-	);
+	try {
+		$wpdb->insert(
+			$table_name,
+			array(
+				'funnel_id' => $funnel_id,
+				'funnel_message' => $funnel_message,
+				'funnel_phone' => $phone_number
+			)
+		);
+	} catch (Exception $e) {
+		return new DatabaseResponse('error', $e->getMessage());
+	}
+	return new DatabaseResponse('success', 'Phone number submitted');
 }
 
 //submit emails
 function wps_db_submit_email($funnel_id, $funnel_message, $email) {
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_database';
-	$wpdb->insert(
-		$table_name,
-		array(
-			'funnel_id' => $funnel_id,
-			'funnel_message' => $funnel_message,
-			'funnel_email' => $email
-		)
-	);
+	try {
+		$wpdb->insert(
+			$table_name,
+			array(
+				'funnel_id' => $funnel_id,
+				'funnel_message' => $funnel_message,
+				'funnel_email' => $email
+			)
+		);
+	} catch (Exception $e) {
+		return new DatabaseResponse('error', $e->getMessage());
+	}
+	return new DatabaseResponse('success', 'Email submitted');
 }
 
