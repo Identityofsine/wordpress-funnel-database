@@ -38,7 +38,7 @@ function wps_db_submit_phone_number($funnel_id, $funnel_message, $phone_number) 
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_database';
 	try {
-		$wpdb->insert(
+		$db_response = $wpdb->insert(
 			$table_name,
 			array(
 				'funnel_id' => $funnel_id,
@@ -46,6 +46,10 @@ function wps_db_submit_phone_number($funnel_id, $funnel_message, $phone_number) 
 				'funnel_phone' => $phone_number
 			)
 		);
+		//throw error if DB error happens
+		if ($db_response === false) {
+			throw new Exception('Database error');
+		}
 	} catch (Exception $e) {
 		return new DatabaseResponse('error', $e->getMessage());
 	}
