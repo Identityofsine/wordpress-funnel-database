@@ -4,6 +4,12 @@
 //function that removes the table from the database on uninstall
 
 function wps_funnel_database_install() {
+	init_funnel_database();
+	init_funnel_object_database();
+}
+
+//function that creates the table in the database on install
+function init_funnel_database() {
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_database';
 	$charset_collate = $wpdb->get_charset_collate();
@@ -23,6 +29,25 @@ function wps_funnel_database_install() {
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	dbDelta( $sql );
 }
+
+function init_funnel_object_database() {
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'funnel_object_database';
+	$charset_collate = $wpdb->get_charset_collate();
+
+	//make sure only one element in the table can have active set to true
+	$sql = "CREATE TABLE IF NOT EXISTS $table_name (
+		id mediumint(9) NOT NULL AUTO_INCREMENT,
+		funnel_id mediumint(9) NOT NULL,
+		funnel_message varchar(255) NOT NULL,
+		active boolean NOT NULL DEFAULT FALSE,
+		PRIMARY KEY (id)
+	) $charset_collate;";
+
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	dbDelta( $sql );
+}
+
 
 
 function wps_funnel_database_uninstall() {
