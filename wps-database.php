@@ -1,10 +1,5 @@
 <?php
 
-//run function on install
-
-register_activation_hook(__FILE__, 'wps_funnel_database_install');
-//hook that runs wps_funnel_database_uninstall
-register_uninstall_hook(__FILE__, 'wps_funnel_database_uninstall');
 
 //function that removes the table from the database on uninstall
 
