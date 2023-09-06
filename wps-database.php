@@ -127,8 +127,6 @@ function wps_db_submit_funnel_element($funnel_obj) : DatabaseResponse {
 		if($db_response === false) {
 			throw new Exception('Database error');
 		}
-		
-
 
 	} catch (Exception $e) {
 		return new DatabaseResponse('error', $e->getMessage());
