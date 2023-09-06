@@ -51,3 +51,17 @@ function wps_db_submit_phone_number($funnel_id, $funnel_message, $phone_number) 
 	);
 }
 
+//submit emails
+function wps_db_submit_email($funnel_id, $funnel_message, $email) {
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'funnel_database';
+	$wpdb->insert(
+		$table_name,
+		array(
+			'funnel_id' => $funnel_id,
+			'funnel_message' => $funnel_message,
+			'funnel_email' => $email
+		)
+	);
+}
+
