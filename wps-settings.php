@@ -1,5 +1,7 @@
 <?php
 
+require_once('wps-database.php');
+
 function funnel_plugin_menu() {
 	add_menu_page(
 		'Funnel Plugin Settings', // Page title
@@ -37,8 +39,25 @@ function funnel_plugin_settings_page() {
 }
 
 function funnel_plugin_create_page () {
-
+	//create an input form that takes in a funnel_id, funnel_message, and funnel_active and calls the function wps_db_submit_funnel_element
+	//create a form that takes in a funnel_id, funnel_message, funnel_active
+	//create a button that calls the function wps_db_submit_funnel_element
+	//create a table that displays all the funnel elements
+	if (isset($_POST['submit_funnel'])) {
+		$funnel_message = $_POST['funnel_message'];
+		
+	}
+	?>
+	<h1>Submit Funnel Element</h1>
+	<form method="post" action="">
+			<label>Funnel Message</label>
+			<input type="text" name="funnel_message">
+			<?php submit_button("Create Funnel", "primary", "submit_funnel"); ?>
+	</form>
+	<?php
 }
+
+
 
 function funnel_plugin_manage_page () {
 
