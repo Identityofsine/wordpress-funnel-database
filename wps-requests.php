@@ -4,10 +4,28 @@ require_once('wps-database.php');
 require_once('wps-response.php');
 
 
+/**
+ * {
+ *  "funnel_id":int,
+ *  "funnel_message":string,
+ * 	"email":string | undefinied
+ * 	"number":string | undefinied
+ * }
+ * 
+ * 
+ */
+
 function wps_rest_handle_request($wp) {
 
 	//check if number or email is set -- then call function responsible for database
 	$response = new DatabaseResponse('fail', 'No email or number set');		
+
+	//check if 'funnel_id' or 'funnel_message' are undefined, if so return false
+	if (!isset($wp['funnel_id']) || !isset($wp['funnel_message'])) {
+		wp_send_json(['status' => 'error', 'message' => 'No funnel id or message set']);
+		exit();
+	}
+
 	try {
 		//create a variable that holds the response
 		if (isset($wp['number'])) {
