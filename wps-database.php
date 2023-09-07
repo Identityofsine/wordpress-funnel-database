@@ -116,6 +116,20 @@ function wps_db_get_data_by_funnel_id($funnel_id) {
 	return new DatabaseResponse('success', $funnel_data);
 }
 
+function wps_db_get_data_all_funnel() {
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'funnel_database';
+	try {
+		$funnel_data = $wpdb->get_results("SELECT * FROM $table_name");
+		if ($funnel_data === null) {
+			throw new Exception('No data for this funnel id');
+		}
+	} catch (Exception $e) {
+		return new DatabaseResponse('error', $e->getMessage());
+	}
+	return new DatabaseResponse('success', $funnel_data);
+}
+
 /**
  * {
  *   "funnel_message":string,

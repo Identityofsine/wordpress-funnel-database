@@ -134,7 +134,11 @@ function funnel_plugin_data_page() {
 		return;
 	} else {
 		$funnel_id = $_GET['funnel_id'];
-		$db_response = wps_db_get_data_by_funnel_id($funnel_id);
+		if($funnel_id === '-1') {
+			$db_response = wps_db_get_data_all_funnel();
+		} else {
+			$db_response = wps_db_get_data_by_funnel_id($funnel_id);
+		}
 	}
 	if($db_response->status === 'error') {
 		echo $db_response->message;
