@@ -32,6 +32,16 @@ function funnel_plugin_menu() {
 			'funnel_plugin_manage_page' // Callback function to display the page
 	);
 
+	//view data by each funnel element
+	add_submenu_page(
+			'funnel-plugin-settings', // Parent menu slug
+			'View Funnel Data', // Page title
+			'View Funnel Data', // Menu title
+			'manage_options', // Capability required to access
+			'view-funnel-data-elements', // Menu slug
+			'funnel_plugin_data_page' // Callback function to display the page
+	);
+
 }
 add_action('admin_menu', 'funnel_plugin_menu');
 
@@ -82,7 +92,8 @@ function funnel_plugin_manage_page () {
 						<tr>
 								<th>Funnel Id</th>
 								<th>Funnel Message</th>
-								<th>Active</th>
+								<th>Activate</th>
+								<th>View Details</th>
 								<!-- Add more column headers as needed -->
 						</tr>
 				</thead>
@@ -104,10 +115,28 @@ function funnel_plugin_manage_page () {
 										<?php endif; ?>
 									</form>
 								</td>
+								<td>
+									<button class="button" onclick="window.location.href='<?php echo esc_url(admin_url('admin.php?page=view-funnel-data-elements&funnel_id=' . $funnel->id)); ?>'">View Data</button>
+								</td>
 							</tr>
 						<?php endforeach; ?>
 				</tbody>
 			</table>
+		</div>
+	<?php
+}
+
+function funnel_plugin_data_page() {
+	if(!isset($_GET['funnel_id'])) {
+		echo 'No funnel id set';
+		return;
+	} else {
+		$funnel_id = $_GET['funnel_id'];
+		echo 'Funnel id: ' . $funnel_id;
+	}
+	?>
+		<div class="wrap">
+
 		</div>
 	<?php
 }
