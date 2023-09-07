@@ -66,8 +66,8 @@ function funnel_plugin_manage_page () {
 		return;
 	}
 	if (isset($_POST['submit_funnel_change'])) {
-		$funnel_message = $_POST['funnel_id'];
-		$db_response = wps_db_set_funnel_active($funnel_message);
+		$funnel_id = $_POST['funnel_id'];
+		$db_response = wps_db_set_funnel_active($funnel_id);
 		if($db_response->status === 'error') {
 			echo $db_response->message;
 			return;
@@ -99,7 +99,7 @@ function funnel_plugin_manage_page () {
 							<?php if ($funnel->active) : ?>
 									<button class="button disabled">Already Active</button>
 							<?php else : ?>
-									<input type="hidden" name="funnel_id" value="<?php echo esc_attr($funnel->funnel_id); ?>">
+									<input type="hidden" name="funnel_id" value="<?php echo esc_attr($funnel->id); ?>">
 									<button class="button" type="submit" name="submit_funnel_change">Activate</button>
 							<?php endif; ?>
 							</td>
