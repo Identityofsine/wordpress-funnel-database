@@ -42,5 +42,9 @@ function register_endpoint_handler_funnel() {
 		'methods' => 'POST',
 		'callback' => 'wps_rest_handle_request',
 	) );
+	register_rest_route( 'funnel', '/current', array(
+		'methods' => 'GET',
+		'callback' => 'wps_rest_get_current_funnel_element',
+	));
 }
 

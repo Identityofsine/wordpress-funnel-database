@@ -139,3 +139,17 @@ function wps_db_submit_funnel_element($funnel_message) : DatabaseResponse {
 	}
 	return new DatabaseResponse('success', 'Funnel element submitted');
 }
+
+function wps_db_get_current_funnel() : DatabaseResponse {
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'funnel_object_database';
+	try {
+		$funnel_element = $wpdb->get_row("SELECT * FROM $table_name WHERE active = true");
+		if ($funnel_element === null) {
+			throw new Exception('No active funnel element');
+		}
+	} catch (Exception $e) {
+		return new DatabaseResponse('error', $e->getMessage());
+	}
+	return new DatabaseResponse('success', $funnel_element);
+}

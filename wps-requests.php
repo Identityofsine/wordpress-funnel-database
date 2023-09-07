@@ -45,3 +45,9 @@ function wps_rest_handle_request($wp) {
 	exit();
 }
 
+function wps_rest_get_current_funnel_element($wp) {
+	//get request, grab the current funnel element by DB_Command
+	$db_response = wps_db_get_current_funnel();
+	wp_send_json(['status' => $db_response, 'data' => $db_response->message]);
+	exit();
+}
