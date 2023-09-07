@@ -168,3 +168,38 @@ function wps_db_get_funnels() : DatabaseResponse {
 	}
 	return new DatabaseResponse('success', $funnel_elements);
 }
+
+function wps_db_set_funnel_active($funnel_id) : DatabaseResponse {
+	//check if the funnel element exists
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'funnel_object_database';
+	$does_funnel_exist = $wpdb->get_row("SELECT * FROM $table_name WHERE id = $funnel_id");
+	if ($does_funnel_exist === null) {
+		return new DatabaseResponse('error', 'Funnel element does not exist');
+	}
+	try {
+		//change elements to false
+		$wpdb->update(
+			$table_name,
+			array(
+				'active' => false
+			),
+			array(
+				'active' => true
+			)
+		);
+
+		$wpdb->update(
+			$table_name,
+			array(
+				'active' => true
+			),
+			array(
+				'id' => $funnel_id
+			)
+		);
+		return new DatabaseResponse('success', 'Funnel element set to active');
+	} catch (Exception $e) {
+		return new DatabaseResponse('error', $e->getMessage());
+	}
+}
