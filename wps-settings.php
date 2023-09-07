@@ -134,7 +134,14 @@ function funnel_plugin_data_page() {
 		return;
 	} else {
 		$funnel_id = $_GET['funnel_id'];
+		$db_response = wps_db_get_data_by_funnel_id($funnel_id);
 	}
+	if($db_response->status === 'error') {
+		echo $db_response->message;
+		return;
+	}
+	$funnel_data = (array)$db_response->message;
+	
 	?>
 		<div class="wrap">
 
