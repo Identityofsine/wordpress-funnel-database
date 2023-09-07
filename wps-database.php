@@ -99,6 +99,22 @@ function wps_db_submit_email($funnel_id, $funnel_message, $email) {
 	return new DatabaseResponse('success', 'Email submitted');
 }
 
+/**
+ * Write a function that searches for entries under a funnel_id
+ */
+function wps_db_get_data_by_funnel_id($funnel_id) { 
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'funnel_database';
+	try {
+		$funnel_data = $wpdb->get_results("SELECT * FROM $table_name WHERE funnel_id = $funnel_id");
+		if ($funnel_data === null) {
+			throw new Exception('No data for this funnel id');
+		}
+	} catch (Exception $e) {
+		return new DatabaseResponse('error', $e->getMessage());
+	}
+	return new DatabaseResponse('success', $funnel_data);
+}
 
 /**
  * {
@@ -203,3 +219,4 @@ function wps_db_set_funnel_active($funnel_id) : DatabaseResponse {
 		return new DatabaseResponse('error', $e->getMessage());
 	}
 }
+

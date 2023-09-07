@@ -127,12 +127,13 @@ function funnel_plugin_manage_page () {
 }
 
 function funnel_plugin_data_page() {
+	$db_response = new DatabaseResponse('fail', 'No funnel id set');
+
 	if(!isset($_GET['funnel_id'])) {
 		echo 'No funnel id set';
 		return;
 	} else {
 		$funnel_id = $_GET['funnel_id'];
-		echo 'Funnel id: ' . $funnel_id;
 	}
 	?>
 		<div class="wrap">
