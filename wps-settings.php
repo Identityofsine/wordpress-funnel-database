@@ -164,8 +164,8 @@ function funnel_plugin_data_page() {
 							<tr style="box-sizing: border-box;">
 								<td><?php echo esc_html($funnel->funnel_id); ?></td>
 								<td><?php echo esc_html($funnel->funnel_message); ?></td>
-								<td><?php echo esc_html(sizeof($funnel->funnel_email) == 0 ? '' : $funnel->funnel_email); ?></td>
-								<td><?php echo esc_html(sizeof($funnel->funnel_phone) == 0 ? '' : $funnel->funnel_phone); ?></td>
+								<td><?php echo empty($funnel->funnel_email) ? '<b>N\A</b>' : $funnel->funnel_email; ?></td>
+								<td><?php echo empty($funnel->funnel_phone) ? '<b>N\A</b>' : $funnel->funnel_phone; ?></td>
 								<!-- Add more data columns as needed -->
 							</tr>
 						<?php endforeach; ?>
