@@ -65,39 +65,49 @@ function funnel_plugin_manage_page () {
 		echo $db_response->message;
 		return;
 	}
+	if (isset($_POST['submit_funnel_change'])) {
+		$funnel_message = $_POST['funnel_id'];
+		$db_response = wps_db_set_funnel_active($funnel_message);
+		if($db_response->status === 'error') {
+			echo $db_response->message;
+			return;
+		}
+	}
 	$db_response = (array)wps_db_get_funnels()->message;
 	?>
-	<div class="wrap">
-		<h2>Current Funnels</h2>
-		<table class="wp-list-table widefat fixed" style="margin-top:1%;">
-			<thead>
-					<tr>
-							<th>Funnel Id</th>
-							<th>Funnel Message</th>
-							<th>Active</th>
-							<!-- Add more column headers as needed -->
-					</tr>
-			</thead>
-			<tbody>
-				<?php 
-					//write for loop using $db_response, treat it as an array of {active:boolean, funnel_message:string}
-					foreach($db_response as $funnel) : ?>
+	<form method="post" action="">
+		<div class="wrap">
+			<h2>Current Funnels</h2>
+			<table class="wp-list-table widefat fixed" style="margin-top:1%;">
+				<thead>
 						<tr>
-						<td><?php echo esc_html($funnel->active); ?></td>
-						<td><?php echo esc_html($funnel->funnel_message); ?></td>
-						<!-- Add more data columns as needed -->
-						<td>
-							<?php 
-								if($funnel->active)
-									echo '<button class="button disabled">Already Active</button> <!-- Button for each entry -->';
-								else
-									echo '<button class="button">Activate</button> <!-- Button for each entry -->'	
-							?>
-						</td>
+								<th>Funnel Id</th>
+								<th>Funnel Message</th>
+								<th>Active</th>
+								<!-- Add more column headers as needed -->
 						</tr>
-					<?php endforeach; ?>
-			</tbody>
-		</table>
-	</div>
+				</thead>
+				<tbody>
+					<?php 
+						//write for loop using $db_response, treat it as an array of {active:boolean, funnel_message:string}
+						foreach($db_response as $funnel) : ?>
+							<tr>
+							<td><?php echo esc_html($funnel->active); ?></td>
+							<td><?php echo esc_html($funnel->funnel_message); ?></td>
+							<!-- Add more data columns as needed -->
+							<td>
+								<?php 
+									if($funnel->active)
+										echo '<button class="button disabled">Already Active</button> <!-- Button for each entry -->';
+									else
+										echo '<button class="button">Activate</button> <!-- Button for each entry -->'	
+								?>
+							</td>
+							</tr>
+						<?php endforeach; ?>
+				</tbody>
+			</table>
+		</div>
+	</form>
 	<?php
 }
