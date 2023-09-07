@@ -96,12 +96,12 @@ function funnel_plugin_manage_page () {
 							<td><?php echo esc_html($funnel->funnel_message); ?></td>
 							<!-- Add more data columns as needed -->
 							<td>
-								<?php 
-									if($funnel->active)
-										echo '<button class="button disabled">Already Active</button> <!-- Button for each entry -->';
-									else
-										echo '<button class="button">Activate</button> <!-- Button for each entry -->'	
-								?>
+							<?php if ($funnel->active) : ?>
+									<button class="button disabled">Already Active</button>
+							<?php else : ?>
+									<input type="hidden" name="funnel_id" value="<?php echo esc_attr($funnel->funnel_id); ?>">
+									<button class="button" type="submit" name="submit_funnel_change">Activate</button>
+							<?php endif; ?>
 							</td>
 							</tr>
 						<?php endforeach; ?>
