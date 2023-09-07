@@ -75,7 +75,6 @@ function funnel_plugin_manage_page () {
 	}
 	$db_response = (array)wps_db_get_funnels()->message;
 	?>
-	<form method="post" action="">
 		<div class="wrap">
 			<h2>Current Funnels</h2>
 			<table class="wp-list-table widefat fixed" style="margin-top:1%; border:2px solid #f2f2f2;">
@@ -92,22 +91,23 @@ function funnel_plugin_manage_page () {
 						//write for loop using $db_response, treat it as an array of {active:boolean, funnel_message:string}
 						foreach($db_response as $funnel) : ?>
 							<tr style="box-sizing: border-box;">
-								<td><?php echo esc_html($funnel->active); ?></td>
+								<td><?php echo esc_html($funnel->id); ?></td>
 								<td><?php echo esc_html($funnel->funnel_message); ?></td>
 								<!-- Add more data columns as needed -->
 								<td>
-								<?php if ($funnel->active) : ?>
-										<button class="button disabled">Already Active</button>
-								<?php else : ?>
-										<input type="hidden" name="funnel_id" value="<?php echo esc_attr($funnel->id); ?>">
-										<button class="button" type="submit" name="submit_funnel_change">Activate</button>
-								<?php endif; ?>
+									<form method="post" action="">
+										<?php if ($funnel->active) : ?>
+												<button class="button disabled">Already Active</button>
+										<?php else : ?>
+												<input type="hidden" name="funnel_id" value="<?php echo esc_attr($funnel->id); ?>">
+												<button class="button" type="submit" name="submit_funnel_change">Activate</button>
+										<?php endif; ?>
+									</form>
 								</td>
 							</tr>
 						<?php endforeach; ?>
 				</tbody>
 			</table>
 		</div>
-	</form>
 	<?php
 }
