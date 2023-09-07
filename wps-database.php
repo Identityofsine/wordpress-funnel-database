@@ -38,7 +38,6 @@ function init_funnel_object_database() {
 	//make sure only one element in the table can have active set to true
 	$sql = "CREATE TABLE IF NOT EXISTS $table_name (
 		id mediumint(9) NOT NULL AUTO_INCREMENT,
-		funnel_id mediumint(9) NOT NULL,
 		funnel_message varchar(255) NOT NULL,
 		active boolean NOT NULL DEFAULT FALSE,
 		PRIMARY KEY (id)
@@ -100,8 +99,16 @@ function wps_db_submit_email($funnel_id, $funnel_message, $email) {
 	return new DatabaseResponse('success', 'Email submitted');
 }
 
+
+/**
+ * {
+ *   "funnel_message":string,
+ * 	 "active":boolean
+ * }
+ */
+
 // submit a new funnel_element object into funnel_element table
-function wps_db_submit_funnel_element($funnel_obj) : DatabaseResponse { 
+function wps_db_submit_funnel_element($funnel_message) : DatabaseResponse { 
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_object_database';
 	try {
@@ -119,9 +126,8 @@ function wps_db_submit_funnel_element($funnel_obj) : DatabaseResponse {
 		$db_response = $wpdb->insert(
 			$table_name,
 			array(
-				'funnel_id' => $funnel_obj->funnel_id,
-				'funnel_message' => $funnel_obj->funnel_message,
-				'active' => $funnel_obj->active
+				'funnel_message' => $funnel_message,
+				'active' => true
 			)
 		);
 		if($db_response === false) {
