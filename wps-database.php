@@ -148,6 +148,7 @@ function wps_db_get_current_funnel() : DatabaseResponse {
 		if ($funnel_element === null) {
 			throw new Exception('No active funnel element');
 		}
+		$funnel_element->active = (bool)$funnel_element->active;
 	} catch (Exception $e) {
 		return new DatabaseResponse('error', $e->getMessage());
 	}
