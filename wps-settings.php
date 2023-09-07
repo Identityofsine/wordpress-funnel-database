@@ -141,10 +141,36 @@ function funnel_plugin_data_page() {
 		return;
 	}
 	$funnel_data = (array)$db_response->message;
-	
+
 	?>
 		<div class="wrap">
-
+			<h2>Funnel Data</h2>
+			<table class="wp-list-table widefat fixed" style="margin-top:1%; border:2px solid #f2f2f2;">
+				<thead>
+						<tr>
+								<th>Funnel Id</th>
+								<th>Funnel Message</th>
+								<th>Funnel Email</th>
+								<th>Funnel Phone Number</th>
+								<!-- Add more column headers as needed -->
+						</tr>
+				</thead>
+				<tbody>
+					<?php 
+						//write for loop using $db_response, treat it as an array of {active:boolean, funnel_message:string}
+						foreach($funnel_data as $funnel) : 
+							
+						?>
+							<tr style="box-sizing: border-box;">
+								<td><?php echo esc_html($funnel->funnel_id); ?></td>
+								<td><?php echo esc_html($funnel->funnel_message); ?></td>
+								<td><?php echo esc_html($funnel->funnel_email); ?></td>
+								<td><?php echo esc_html($funnel->funnel_number); ?></td>
+								<!-- Add more data columns as needed -->
+							</tr>
+						<?php endforeach; ?>
+				</tbody>
+			</table>
 		</div>
 	<?php
 }
