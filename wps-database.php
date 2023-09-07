@@ -154,3 +154,17 @@ function wps_db_get_current_funnel() : DatabaseResponse {
 	}
 	return new DatabaseResponse('success', $funnel_element);
 }
+
+function wps_db_get_funnels() : DatabaseResponse {
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'funnel_object_database';
+	try {
+		$funnel_elements = $wpdb->get_results("SELECT * FROM $table_name");
+		if ($funnel_elements === null) {
+			throw new Exception('No funnel elements');
+		}
+	} catch (Exception $e) {
+		return new DatabaseResponse('error', $e->getMessage());
+	}
+	return new DatabaseResponse('success', $funnel_elements);
+}
