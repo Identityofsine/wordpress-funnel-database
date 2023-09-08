@@ -122,6 +122,9 @@ function funnel_plugin_manage_page () {
 						<?php endforeach; ?>
 				</tbody>
 			</table>
+			<div style="width:fit-content; margin-left:auto;">
+			<a href="admin.php?page=view-funnel-data-elements&funnel_id=-1">See All</a>
+			</div>
 		</div>
 	<?php
 }
@@ -130,8 +133,7 @@ function funnel_plugin_data_page() {
 	$db_response = new DatabaseResponse('fail', 'No funnel id set');
 
 	if(!isset($_GET['funnel_id'])) {
-		echo 'No funnel id set';
-		return;
+		$db_response = wps_db_get_data_all_funnel();
 	} else {
 		$funnel_id = $_GET['funnel_id'];
 		if($funnel_id === '-1') {
