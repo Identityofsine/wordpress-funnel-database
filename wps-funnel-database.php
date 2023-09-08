@@ -2,7 +2,7 @@
 /*
 * Plugin Name:       RESTful Funnel Database
 * Description:       Creates a REST API for the funnel database, allows for POST requests to submit data into a database
-* Version:           2.0 
+* Version:           2.5 
 * Requires at least: 5.2
 * Requires PHP:      7.2
 * Author:            Kevin Erdogan
