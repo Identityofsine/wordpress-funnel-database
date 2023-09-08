@@ -131,15 +131,20 @@ function funnel_plugin_manage_page () {
 
 function funnel_plugin_data_page() {
 	$db_response = new DatabaseResponse('fail', 'No funnel id set');
-
+	$is_all = false;
+	$funnel_name = "_";
 	if(!isset($_GET['funnel_id'])) {
 		$db_response = wps_db_get_data_all_funnel();
+		$is_all = true;
 	} else {
 		$funnel_id = $_GET['funnel_id'];
 		if($funnel_id === '-1') {
 			$db_response = wps_db_get_data_all_funnel();
+			$is_all = true;
 		} else {
 			$db_response = wps_db_get_data_by_funnel_id($funnel_id);
+			//ignore error
+			$funnel_name = wps_db_get_funnel_by_id($funnel_id)->message->funnel_message;
 		}
 	}
 	if($db_response->status === 'error') {
@@ -150,7 +155,7 @@ function funnel_plugin_data_page() {
 
 	?>
 		<div class="wrap">
-			<h2>Funnel Data</h2>
+			<h2><?php echo $is_all ? 'Viewing Data Collected From All Funnels' : 'Viewing Data Collected From \''.$funnel_name.'\''?></h2>
 			<table class="wp-list-table widefat fixed" style="margin-top:1%; border:2px solid #f2f2f2;">
 				<thead>
 						<tr>

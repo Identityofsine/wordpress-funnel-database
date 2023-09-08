@@ -185,6 +185,20 @@ function wps_db_get_current_funnel() : DatabaseResponse {
 	return new DatabaseResponse('success', $funnel_element);
 }
 
+function wps_db_get_funnel_by_id($funnel_id) : DatabaseResponse {
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'funnel_object_database';
+	try {
+		$funnel_element = $wpdb->get_row("SELECT * FROM $table_name WHERE id = $funnel_id");
+		if ($funnel_element === null) {
+			throw new Exception('No funnel element');
+		}
+	} catch (Exception $e) {
+		return new DatabaseResponse('error', $e->getMessage());
+	}
+	return new DatabaseResponse('success', $funnel_element);
+}
+
 function wps_db_get_funnels() : DatabaseResponse {
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_object_database';
