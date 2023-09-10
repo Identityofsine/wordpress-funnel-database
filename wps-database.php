@@ -40,6 +40,13 @@ function init_funnel_object_database() {
 		id mediumint(9) NOT NULL AUTO_INCREMENT,
 		funnel_message varchar(255) NOT NULL,
 		active boolean NOT NULL DEFAULT FALSE,
+		phone boolean NOT NULL DEFAULT TRUE,
+		hero_image varchar(255) #most likely a pointer to an image,
+		header_icon varchar(255), #most likely a pointer to an image,
+		header_text varchar(255),
+		header_subtext varchar(255),
+		button_text varchar(255),
+
 		PRIMARY KEY (id)
 	) $charset_collate;";
 
