@@ -187,14 +187,27 @@ function wps_db_get_current_funnel() : DatabaseResponse {
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_object_database';
 	try {
-		$funnel_element = $wpdb->get_row("SELECT * FROM $table_name WHERE active = true");
-		if ($funnel_element === null) {
+		$found_funnel_element = $wpdb->get_row("SELECT * FROM $table_name WHERE active = true");
+		if ($found_funnel_element === null) {
 			throw new Exception('No active funnel element');
 		}
-		$funnel_element->active = (bool)$funnel_element->active;
+		$found_funnel_element->active = (bool)$found_funnel_element->active;
 	} catch (Exception $e) {
 		return new DatabaseResponse('error', $e->getMessage());
 	}
+	//cast the result into a FunnelObject
+	$funnel_element = new FunnelObject(
+		$found_funnel_element->id,
+		$found_funnel_element->message,
+		(bool) $found_funnel_element->active,
+		(bool) $found_funnel_element->phone,
+		$found_funnel_element->hero_image,
+		$found_funnel_element->header_icon,
+		$found_funnel_element->header_text,
+		$found_funnel_element->header_subtext,
+		$found_funnel_element->button_text
+	);
+
 	return new DatabaseResponse('success', $funnel_element);
 }
 
