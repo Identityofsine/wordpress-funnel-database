@@ -198,7 +198,7 @@ function wps_db_get_current_funnel() : DatabaseResponse {
 	//cast the result into a FunnelObject
 	$funnel_element = new FunnelObject(
 		$found_funnel_element->id,
-		$found_funnel_element->message,
+		$found_funnel_element->funnel_message,
 		(bool) $found_funnel_element->active,
 		(bool) $found_funnel_element->phone,
 		$found_funnel_element->hero_image,

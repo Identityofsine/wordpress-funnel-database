@@ -23,6 +23,7 @@ header("Access-Control-Allow-Origin: *");
 require_once('wps-database.php');
 require_once('wps-requests.php');
 require_once('wps-settings.php');
+require_once('wps-obj.php');
 
 add_action('rest_api_init', 'register_endpoint_handler_funnel');
 
