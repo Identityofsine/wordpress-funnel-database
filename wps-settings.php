@@ -55,7 +55,9 @@ function funnel_plugin_create_page () {
 	//create a table that displays all the funnel elements
 	if (isset($_POST['submit_funnel'])) {
 		$funnel_message = $_POST['funnel_message'];
-		wps_db_submit_funnel_element($funnel_message);
+		//convert post into a funnel object
+		$funnel_obj = new FunnelObject(-1, $funnel_message);
+		wps_db_submit_funnel_element($funnel_obj);
 	}
 	?>
 	<h1>Submit Funnel Element</h1>
