@@ -8,7 +8,7 @@ function return_wordpress_media_files() {
 			$image = wp_get_attachment_image( $image_id, 'medium', false, array( 'id' => 'wps-preview-image' ) );
 	} else {
 			// Some default image
-			$image = '<img id="wps-preview-image" class="placeholder-img" src="/wordpress/wp-content/uploads/woocommerce-placeholder.png" />';
+			$image = '<img id="wps-preview-image" class="placeholder-img icon" src="/wordpress/wp-content/uploads/woocommerce-placeholder.png" />';
 	}
 
 	echo $image; ?>

@@ -61,23 +61,33 @@ function funnel_plugin_create_page () {
 	}
 	?>
 	<h1>Submit Funnel Element</h1>
-	<form method="post" action="">
-		<!-- message -->
+	<form method="post" action="" class="flex column gap-3">
 		<!-- Handle all data types in FunnelObject  -->
-		<label>Funnel Message</label>
-		<input type="text" name="funnel_message">
 
-		<!-- active boolean -->
-		<label>Set Active?</label>
-		<input type="checkbox" name="active" value="true">
-		<!-- phone number or email -->
-		<label>Phone Number or Email Funnel?</label>
-		<input type="checkbox" name="active" value="true">
-		<!-- hero image -->
-		<label>Hero Image</label>
-		<!-- convert into wordpress api to import media -->
-		<?php return_wordpress_media_files()?>
+		<div class="flex align-center gap-05">
+			<!-- message -->
+			<label>Funnel Message:</label>
+			<input type="text" name="funnel_message">
+		</div>
+		<div class="flex align-center gap-05">
+			<!-- active boolean -->
+			<label>Set Active?:</label>
+			<input type="checkbox" name="active" value="true">
+		</div>
+		<div class="flex align-center gap-05">
+			<!-- phone number or email -->
+			<label>Phone Number or Email Funnel?:</label>
+			<input type="checkbox" name="active" value="true">
+		</div>
 
+		<div class="flex column gap-1">
+			<!-- hero image -->
+			<!-- convert into wordpress api to import media -->
+			<label>Hero Image</label>
+			<div class="flex align-bottom gap-1">
+				<?php return_wordpress_media_files()?>
+			</div>
+		</div>
 
 		<?php submit_button("Create Funnel", "primary", "submit_funnel"); ?>
 	</form>

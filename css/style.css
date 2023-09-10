@@ -14,7 +14,15 @@
 	justify-content: center;
 }
 
-.flex-column {
+.justify-bottom {
+	justify-content: flex-end;
+}
+
+.align-bottom {
+	align-items: flex-end;
+}
+
+.column {
 	flex-direction: column;
 }
 
@@ -32,6 +40,14 @@
 
 .flex-3 {
 	flex: 3;
+}
+
+.gap-025 {
+	gap: 0.25rem;
+}
+
+.gap-05 {
+	gap: 0.5rem;
 }
 
 .gap-1 {
@@ -62,4 +78,9 @@
 .placeholder-img.header {
 	width: 16rem;
 	height: 12rem;
+}
+
+label {
+	font-weight: bold;
+	font-size: 2rem;
 }
