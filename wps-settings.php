@@ -85,7 +85,7 @@ function funnel_plugin_create_page () {
 			<!-- convert into wordpress api to import media -->
 			<label>Hero Image</label>
 			<div class="flex align-bottom gap-1">
-				<?php return_wordpress_media_files()?>
+				<?php return_wordpress_media_files('placeholder-img header')?>
 			</div>
 		</div>
 
