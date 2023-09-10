@@ -48,3 +48,13 @@ function register_endpoint_handler_funnel() {
 	));
 }
 
+add_action( 'admin_enqueue_scripts', 'load_wp_media_files' );
+function load_wp_media_files( $page ) {
+  // change to the $page where you want to enqueue the script
+  if( $page == 'funnel_page_create-funnel-element' ) {
+    // Enqueue WordPress media scripts
+    wp_enqueue_media();
+    // Enqueue custom script that will interact with wp.media
+    wp_enqueue_script( 'wps_script', plugins_url( '/js/media-script.js' , __FILE__ ), array('jquery'), '0.1' );
+  }
+}
