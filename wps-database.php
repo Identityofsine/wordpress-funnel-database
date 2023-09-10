@@ -145,7 +145,7 @@ function wps_db_get_data_all_funnel() {
  */
 
 // submit a new funnel_element object into funnel_element table
-function wps_db_submit_funnel_element($funnel_message) : DatabaseResponse { 
+function wps_db_submit_funnel_element(FunnelObject $funnel_object) : DatabaseResponse { 
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_object_database';
 	try {
@@ -163,8 +163,14 @@ function wps_db_submit_funnel_element($funnel_message) : DatabaseResponse {
 		$db_response = $wpdb->insert(
 			$table_name,
 			array(
-				'funnel_message' => $funnel_message,
-				'active' => true
+				'funnel_message' => $funnel_object->message,
+				'active' => $funnel_object->active,
+				'phone' => $funnel_object->phone,
+				'hero_image' => $funnel_object->hero_image,
+				'header_icon' => $funnel_object->header_icon,
+				'header_text' => $funnel_object->header_text,
+				'header_subtext' => $funnel_object->header_subtext,
+				'button_text' => $funnel_object->button_text
 			)
 		);
 		if($db_response === false) {
