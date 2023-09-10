@@ -1,6 +1,6 @@
 <?php
 
-require_once('wps-database.php');
+require_once('wps-html-prefabs.php');
 
 function funnel_plugin_menu() {
 	add_menu_page(
@@ -76,7 +76,8 @@ function funnel_plugin_create_page () {
 		<!-- hero image -->
 		<label>Hero Image</label>
 		<!-- convert into wordpress api to import media -->
-		
+		<?php return_wordpress_media_files()?>
+
 
 		<?php submit_button("Create Funnel", "primary", "submit_funnel"); ?>
 	</form>

@@ -56,5 +56,7 @@ function load_wp_media_files( $page ) {
     wp_enqueue_media();
     // Enqueue custom script that will interact with wp.media
     wp_enqueue_script( 'wps_script', plugins_url( '/js/media-script.js' , __FILE__ ), array('jquery'), '0.1' );
+		// Enqueue CSS 
+		wp_enqueue_style( 'wps_style', plugins_url( '/css/style.css' , __FILE__ ), array(), '0.1' );
   }
 }

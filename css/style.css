@@ -1,0 +1,65 @@
+.media-page {
+
+}
+
+.flex {
+	display: flex;
+}
+
+.align-center {
+	align-items: center;
+}
+
+.justify-center {
+	justify-content: center;
+}
+
+.flex-column {
+	flex-direction: column;
+}
+
+.flex-wrap {
+	flex-wrap: wrap;
+}
+
+.flex-1 {
+	flex: 1;
+}
+
+.flex-2 {
+	flex: 2;
+}
+
+.flex-3 {
+	flex: 3;
+}
+
+.gap-1 {
+	gap: 1rem;
+}
+
+.gap-2 {
+	gap: 2rem;
+}
+
+.gap-3 {
+	gap: 3rem;
+}
+
+.gap-4 {
+	gap: 4rem;
+}
+
+.placeholder-img {
+	object-fit: cover;
+}
+
+.placeholder-img.icon {
+	width: 8rem;
+	height: 8rem;
+}
+
+.placeholder-img.header {
+	width: 16rem;
+	height: 12rem;
+}
