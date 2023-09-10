@@ -9,7 +9,7 @@ class DatabaseResponse {
 
 
 	//constructor that takes in a status and a message
-	public function __construct($status = '', $message = '') {
+	public function __construct($status = '', $message = null) {
 		$this->status = $status;
 		$this->message = $message;
 	}

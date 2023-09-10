@@ -143,8 +143,11 @@ function funnel_plugin_data_page() {
 			$is_all = true;
 		} else {
 			$db_response = wps_db_get_data_by_funnel_id($funnel_id);
+			$db_funnel_name_response = wps_db_get_funnel_by_id($funnel_id);
 			//ignore error
-			$funnel_name = wps_db_get_funnel_by_id($funnel_id)->message->funnel_message;
+			if(isset($db_funnel_name_response->message)) {
+				$funnel_name = $db_funnel_name_response->message->funnel_message;
+			}
 		}
 	}
 	if($db_response->status === 'error') {
