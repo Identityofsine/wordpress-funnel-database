@@ -1,6 +1,6 @@
 <?php
 
-function return_wordpress_media_files($image_class = '') {
+function return_wordpress_media_files($image_class = '', $image_id = '') {
 
 	$image_id = get_option( 'wps_image_id' );
 	if( intval( $image_id ) > 0 ) {
@@ -8,7 +8,7 @@ function return_wordpress_media_files($image_class = '') {
 			$image = wp_get_attachment_image( $image_id, 'medium', false, array( 'id' => 'wps-preview-image' ) );
 	} else {
 			// Some default image
-			$image = '<img id="wps-preview-image" class="'.$image_class.'" src="/wordpress/wp-content/uploads/woocommerce-placeholder.png" />';
+			$image = '<img id="wps-'.$image_id.'" class="'.$image_class.'" src="/wordpress/wp-content/uploads/woocommerce-placeholder.png" />';
 	}
 
 	echo $image; ?>
