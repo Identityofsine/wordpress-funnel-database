@@ -26,11 +26,10 @@ require_once('wps-settings.php');
 
 add_action('rest_api_init', 'register_endpoint_handler_funnel');
 
-//run function on install
-
 register_activation_hook(__FILE__, 'wps_funnel_database_install');
 //hook that runs wps_funnel_database_uninstall
 register_uninstall_hook(__FILE__, 'wps_funnel_database_uninstall');
+
 
 function register_endpoint_handler_funnel() {
 	//add two POST requests: 'submitNumber', 'submitEmail'

@@ -1,14 +1,15 @@
 <?php
 
 
-//function that removes the table from the database on uninstall
+//run function on install
 
-function wps_funnel_database_install() {
-	init_funnel_database();
-	init_funnel_object_database();
-}
 
 //function that creates the table in the database on install
+function wps_funnel_database_install() {
+	init_funnel_object_database();
+	init_funnel_database();
+}
+
 function init_funnel_database() {
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_database';
@@ -41,12 +42,11 @@ function init_funnel_object_database() {
 		funnel_message varchar(255) NOT NULL,
 		active boolean NOT NULL DEFAULT FALSE,
 		phone boolean NOT NULL DEFAULT TRUE,
-		hero_image varchar(255) #most likely a pointer to an image,
-		header_icon varchar(255), #most likely a pointer to an image,
+		hero_image varchar(255),
+		header_icon varchar(255), 
 		header_text varchar(255),
 		header_subtext varchar(255),
 		button_text varchar(255),
-
 		PRIMARY KEY (id)
 	) $charset_collate;";
 
