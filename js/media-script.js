@@ -57,7 +57,7 @@ jQuery(document).ready( function($) {
 });
 
 // Ajax request to refresh the image preview
-function Refresh_Image(the_id){
+function Refresh_Image(the_id, element){
 	var data = {
 		action: 'wps_get_image',
 		id: the_id
