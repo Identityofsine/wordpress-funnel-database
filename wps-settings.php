@@ -56,8 +56,22 @@ function funnel_plugin_create_page () {
 	if (isset($_POST['submit_funnel'])) {
 		$funnel_message = $_POST['funnel_message'];
 		//convert post into a funnel object
-		$funnel_obj = new FunnelObject(-1, $funnel_message);
-		wps_db_submit_funnel_element($funnel_obj);
+		$funnel_obj = new FunnelObject(
+			-1,
+			$funnel_message,
+			isset($_POST['active']),
+			isset($_POST['phone']),
+			$_POST['hero-image'],
+			$_POST['header-icon'],
+			$_POST['header_text'],
+			$_POST['header_subtext'],
+			$_POST['button_text']
+		);
+		$db_response = wps_db_submit_funnel_element($funnel_obj);
+		if($db_response->status === 'error') {
+			echo $db_response->message;
+			return;
+		}
 	}
 	?>
 	<h1>Submit Funnel Element</h1>
@@ -85,8 +99,34 @@ function funnel_plugin_create_page () {
 			<!-- convert into wordpress api to import media -->
 			<label>Hero Image</label>
 			<div class="flex align-bottom gap-1">
-				<?php return_wordpress_media_files('placeholder-img header')?>
+				<?php return_wordpress_media_files('placeholder-img header', 'hero-image')?>
 			</div>
+		</div>
+		<div class="flex column gap-1">
+			<!-- header icon -->
+			<!-- convert into wordpress api to import media -->
+			<label>Header Icon</label>
+			<div class="flex align-bottom gap-1">
+				<?php return_wordpress_media_files('placeholder-img icon', 'header-icon')?>
+			</div>
+		</div>
+
+		<div class="flex align-center gap-05">
+			<!-- header text -->
+			<label>Header Text</label>
+			<input type="text" name="header_text">
+		</div>
+		
+		<div class="flex align-center gap-05">
+			<!-- header subtext -->
+			<label>Header Subtext</label>
+			<input type="text" name="header_subtext">
+		</div>
+
+		<div class="flex align-center gap-05">
+			<!-- button text -->
+			<label>Button Text</label>
+			<input type="text" name="button_text">
 		</div>
 
 		<?php submit_button("Create Funnel", "primary", "submit_funnel"); ?>
