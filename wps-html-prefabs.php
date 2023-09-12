@@ -12,8 +12,7 @@ function return_wordpress_media_files($image_class = '', $image_id = '')
 	}
 
 	echo $image; ?>
-	<input type="hidden" name="wps_image_id" id=<?php echo 'wps_image_id_' . $image_id ?> value="<?php echo esc_attr($image_id); ?>" class="regular-text" />
+	<input type="hidden" id=<?php echo 'wps_image_id_' . $image_id ?> value="<?php echo esc_attr($image_id); ?>" name="<?php echo 'id-' . $image_id ?>" class="regular-text" />
 	<input type='button' class="button-primary" value="<?php esc_attr_e('Select a image', 'mytextdomain'); ?>" id="wps_media_manager" data-image-id="<?php echo $image_id ?>" />
 <?php
 }
-
