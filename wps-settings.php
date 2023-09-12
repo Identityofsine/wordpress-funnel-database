@@ -52,9 +52,8 @@ function funnel_plugin_settings_page()
 function funnel_plugin_create_page()
 {
 	//create an input form that takes in a funnel_id, funnel_message, and funnel_active and calls the function wps_db_submit_funnel_element
-	//create a form that takes in a funnel_id, funnel_message, funnel_active
-	//create a button that calls the function wps_db_submit_funnel_element
-	//create a table that displays all the funnel elements
+
+	// check if post request (submittion or saving)
 	if (isset($_POST['submit_funnel'])) {
 		$funnel_message = $_POST['funnel_message'];
 		//convert post into a funnel object
@@ -69,12 +68,40 @@ function funnel_plugin_create_page()
 			$_POST['header_subtext'],
 			$_POST['button_text']
 		);
+		//submit also updates
 		$db_response = wps_db_submit_funnel_element($funnel_obj);
 		if ($db_response->status === 'error') {
 			echo $db_response->message;
 			return;
 		}
 	}
+	//check if get request (editing)	
+	else if (isset($_GET['funnel_id'])) {
+		$funnel_id = $_GET['funnel_id'];
+		$db_response = wps_db_get_funnel_by_id($funnel_id);
+		if ($db_response->status === 'error') {
+			echo $db_response->message;
+			return;
+		}
+		//cast $db_response->message to FunnelObject
+		$funnel_obj = new FunnelObject(
+			$db_response->message->id,
+			$db_response->message->funnel_message,
+			$db_response->message->active,
+			$db_response->message->phone,
+			$db_response->message->hero_image,
+			$db_response->message->header_icon,
+			$db_response->message->header_text,
+			$db_response->message->header_subtext,
+			$db_response->message->button_text
+		);
+		//print out the funnel_obj in js
+		echo '<script>console.log(' . json_encode($funnel_obj) . ');</script>';
+	} else {
+		//do nothing
+		$funnel_obj = new FunnelObject(-1, '', false, false, -1, -1, '', '', '');
+	}
+
 ?>
 	<h1>Submit Funnel Element</h1>
 	<form method="post" action="" class="flex column gap-1 media-page">
@@ -84,7 +111,7 @@ function funnel_plugin_create_page()
 			<div class="flex align-center gap-05">
 				<!-- message -->
 				<label>Funnel Message:</label>
-				<input type="text" name="funnel_message">
+				<input type="text" name="funnel_message" placeholder="Funnel Message(ID)" value="<?php echo $funnel_obj->message ?>">
 			</div>
 			<div class="flex align-center gap-05">
 				<!-- active boolean -->
@@ -106,7 +133,7 @@ function funnel_plugin_create_page()
 				<!-- convert into wordpress api to import media -->
 				<label>Hero Image</label>
 				<div class="flex align-bottom gap-1">
-					<?php return_wordpress_media_files('placeholder-img header', 'hero-image') ?>
+					<?php return_wordpress_media_files('placeholder-img header', 'hero-image', $funnel_obj->hero_image) ?>
 				</div>
 			</div>
 		</div>
@@ -120,7 +147,11 @@ function funnel_plugin_create_page()
 				<!-- convert into wordpress api to import media -->
 				<label>Header Icon</label>
 				<div class="flex align-bottom gap-1">
-					<?php return_wordpress_media_files('placeholder-img icon', 'header-icon') ?>
+					<?php return_wordpress_media_files(
+						'placeholder-img icon',
+						'header-icon',
+						$funnel_obj->header_icon
+					) ?>
 				</div>
 			</div>
 

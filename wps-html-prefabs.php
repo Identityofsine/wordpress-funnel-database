@@ -1,11 +1,14 @@
 <?php
 
-function return_wordpress_media_files($image_class = '', $image_id = '')
+function return_wordpress_media_files($image_class = '', $image_id = '', $media_id = 0)
 {
-
-	if (intval($image_id) > 0) {
+	echo 'media_id:' . $media_id;
+	if (intval($media_id) > 0) {
 		// Change with the image size you want to use
-		$image = wp_get_attachment_image($image_id, 'medium', false, array('id' => 'wps-' . $image_id));
+		$image = wp_get_attachment_image($media_id, 'medium', false, array('id' => 'wps-' . $image_id));
+		if ($image = '') {
+			$image = '<img id="wps-' . $image_id . '" class="' . $image_class . '" src="/wordpress/wp-content/uploads/woocommerce-placeholder.png" />';
+		}
 	} else {
 		// Some default image
 		$image = '<img id="wps-' . $image_id . '" class="' . $image_class . '" src="/wordpress/wp-content/uploads/woocommerce-placeholder.png" />';
