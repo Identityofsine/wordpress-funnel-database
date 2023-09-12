@@ -97,7 +97,7 @@ function funnel_plugin_create_page()
 		</div>
 
 		<!-- funnel-content-container -->
-		<div class="content-container">
+		<div class="content-container ">
 			<div class="flex column gap-1">
 				<!-- hero image -->
 				<!-- convert into wordpress api to import media -->
