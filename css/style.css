@@ -2,6 +2,14 @@
 	padding-top:2rem;
 }
 
+.content-container {
+	background-color: #fff;
+	padding: 2rem;
+	border-radius: 0.5rem;
+	box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
+	width: fit-content;
+}
+
 .flex {
 	display: flex;
 }
@@ -81,6 +89,6 @@
 }
 
 label {
-	font-weight: bold;
-	font-size: 1.5rem;
+	font-weight: 600;
+	font-size: 1.2rem;
 }

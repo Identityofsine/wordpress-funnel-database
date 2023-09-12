@@ -77,27 +77,28 @@ function funnel_plugin_create_page()
 	}
 ?>
 	<h1>Submit Funnel Element</h1>
-	<form method="post" action="" class="flex column gap-3 media-page">
+	<form method="post" action="" class="flex column gap-1 media-page">
 		<!-- Handle all data types in FunnelObject  -->
+		<div class="content-container flex column gap-1">
+			<div class="flex align-center gap-05">
+				<!-- message -->
+				<label>Funnel Message:</label>
+				<input type="text" name="funnel_message">
+			</div>
+			<div class="flex align-center gap-05">
+				<!-- active boolean -->
+				<label>Set Active?:</label>
+				<input type="checkbox" name="active" value="true">
+			</div>
+			<div class="flex align-center gap-05">
+				<!-- phone number or email -->
+				<label>Phone Number or Email Funnel?:</label>
+				<input type="checkbox" name="active" value="true">
+			</div>
 
-		<div class="flex align-center gap-05">
-			<!-- message -->
-			<label>Funnel Message:</label>
-			<input type="text" name="funnel_message">
-		</div>
-		<div class="flex align-center gap-05">
-			<!-- active boolean -->
-			<label>Set Active?:</label>
-			<input type="checkbox" name="active" value="true">
-		</div>
-		<div class="flex align-center gap-05">
-			<!-- phone number or email -->
-			<label>Phone Number or Email Funnel?:</label>
-			<input type="checkbox" name="active" value="true">
-		</div>
 
-		<!-- funnel-content-container -->
-		<div class="content-container ">
+		</div>
+		<div class="content-container">
 			<div class="flex column gap-1">
 				<!-- hero image -->
 				<!-- convert into wordpress api to import media -->
@@ -106,6 +107,12 @@ function funnel_plugin_create_page()
 					<?php return_wordpress_media_files('placeholder-img header', 'hero-image') ?>
 				</div>
 			</div>
+		</div>
+
+
+		<!-- funnel-content-container -->
+		<div class="content-container flex column gap-1">
+
 			<div class="flex column gap-1">
 				<!-- header icon -->
 				<!-- convert into wordpress api to import media -->
