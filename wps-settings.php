@@ -63,8 +63,8 @@ function funnel_plugin_create_page()
 			$funnel_message,
 			isset($_POST['active']),
 			isset($_POST['phone']),
-			$_POST['hero-image'],
-			$_POST['header-icon'],
+			$_POST['wps_image_id_hero-image'],
+			$_POST['wps_image_id_header-icon'],
 			$_POST['header_text'],
 			$_POST['header_subtext'],
 			$_POST['button_text']
