@@ -80,6 +80,7 @@ function funnel_plugin_create_page()
 	<form method="post" action="" class="flex column gap-1 media-page">
 		<!-- Handle all data types in FunnelObject  -->
 		<div class="content-container flex column gap-1">
+			<h2>Funnel Properties</h2>
 			<div class="flex align-center gap-05">
 				<!-- message -->
 				<label>Funnel Message:</label>
@@ -98,7 +99,8 @@ function funnel_plugin_create_page()
 
 
 		</div>
-		<div class="content-container">
+		<div class="content-container flex column gap-1">
+			<h2>Funnel Hero-Image</h2>
 			<div class="flex column gap-1">
 				<!-- hero image -->
 				<!-- convert into wordpress api to import media -->
@@ -112,7 +114,7 @@ function funnel_plugin_create_page()
 
 		<!-- funnel-content-container -->
 		<div class="content-container flex column gap-1">
-
+			<h2>Funnel Display-Content</h2>
 			<div class="flex column gap-1">
 				<!-- header icon -->
 				<!-- convert into wordpress api to import media -->
