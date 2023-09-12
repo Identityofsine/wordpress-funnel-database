@@ -89,12 +89,12 @@ function funnel_plugin_create_page()
 			<div class="flex align-center gap-05">
 				<!-- active boolean -->
 				<label>Set Active?:</label>
-				<input type="checkbox" name="active" value="true">
+				<input type="checkbox" name="active" checked>
 			</div>
 			<div class="flex align-center gap-05">
 				<!-- phone number or email -->
-				<label>Phone Number or Email Funnel?:</label>
-				<input type="checkbox" name="active" value="true">
+				<label>Phone Number Funnel?:</label>
+				<input type="checkbox" name="phone" checked>
 			</div>
 
 

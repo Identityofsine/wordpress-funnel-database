@@ -15,7 +15,8 @@
 	) $charset_collate;";
  */
 
-class FunnelObject {
+class FunnelObject
+{
 	public $id;
 	public $message;
 	public $active;
@@ -27,17 +28,22 @@ class FunnelObject {
 	public $button_text;
 
 	//-1 id = new object
-	public function __construct($id = -1, $message = '', $active = true, $phone = true, $hero_image = '', $header_icon = '', $header_text = '', $header_subtext = '', $button_text = '') {
+	public function __construct($id = -1, $message = '', $active = true, $phone = true, $hero_image = '', $header_icon = '', $header_text = '', $header_subtext = '', $button_text = '')
+	{
 		$this->id = $id;
 		$this->message = $message;
 		$this->active = $active;
 		$this->phone = $phone;
 		$this->hero_image = $hero_image;
 		$this->header_icon = $header_icon;
-		$this->header_text = $header_text;
-		$this->header_subtext = $header_subtext;
-		$this->button_text = $button_text;
+		$this->header_text = FunnelObject::clear_backslashes($header_text);
+		$this->header_subtext = FunnelObject::clear_backslashes($header_subtext);
+		$this->button_text = FunnelObject::clear_backslashes($button_text);
 	}
 
-	
-} 
+	public static function clear_backslashes($string)
+	{
+		return str_replace('\\', '', $string);
+	}
+}
+
