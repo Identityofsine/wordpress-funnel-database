@@ -5,12 +5,14 @@
 
 
 //function that creates the table in the database on install
-function wps_funnel_database_install() {
+function wps_funnel_database_install()
+{
 	init_funnel_object_database();
 	init_funnel_database();
 }
 
-function init_funnel_database() {
+function init_funnel_database()
+{
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_database';
 	$charset_collate = $wpdb->get_charset_collate();
@@ -27,11 +29,12 @@ function init_funnel_database() {
 		PRIMARY KEY (id)
 	) $charset_collate;";
 
-	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-	dbDelta( $sql );
+	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+	dbDelta($sql);
 }
 
-function init_funnel_object_database() {
+function init_funnel_object_database()
+{
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_object_database';
 	$charset_collate = $wpdb->get_charset_collate();
@@ -50,13 +53,14 @@ function init_funnel_object_database() {
 		PRIMARY KEY (id)
 	) $charset_collate;";
 
-	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-	dbDelta( $sql );
+	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+	dbDelta($sql);
 }
 
 
 
-function wps_funnel_database_uninstall() {
+function wps_funnel_database_uninstall()
+{
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_database';
 	$wpdb->query("DROP TABLE IF EXISTS $table_name");
@@ -64,7 +68,8 @@ function wps_funnel_database_uninstall() {
 
 
 //submi
-function wps_db_submit_phone_number($funnel_id, $funnel_message, $phone_number) : DatabaseResponse {
+function wps_db_submit_phone_number($funnel_id, $funnel_message, $phone_number): DatabaseResponse
+{
 
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_database';
@@ -88,7 +93,8 @@ function wps_db_submit_phone_number($funnel_id, $funnel_message, $phone_number) 
 }
 
 //submit emails
-function wps_db_submit_email($funnel_id, $funnel_message, $email) {
+function wps_db_submit_email($funnel_id, $funnel_message, $email)
+{
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_database';
 	try {
@@ -109,7 +115,8 @@ function wps_db_submit_email($funnel_id, $funnel_message, $email) {
 /**
  * Write a function that searches for entries under a funnel_id
  */
-function wps_db_get_data_by_funnel_id($funnel_id) { 
+function wps_db_get_data_by_funnel_id($funnel_id)
+{
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_database';
 	try {
@@ -123,7 +130,8 @@ function wps_db_get_data_by_funnel_id($funnel_id) {
 	return new DatabaseResponse('success', $funnel_data);
 }
 
-function wps_db_get_data_all_funnel() {
+function wps_db_get_data_all_funnel()
+{
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_database';
 	try {
@@ -145,7 +153,8 @@ function wps_db_get_data_all_funnel() {
  */
 
 // submit a new funnel_element object into funnel_element table
-function wps_db_submit_funnel_element(FunnelObject $funnel_object) : DatabaseResponse { 
+function wps_db_submit_funnel_element(FunnelObject $funnel_object): DatabaseResponse
+{
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_object_database';
 	try {
@@ -173,17 +182,73 @@ function wps_db_submit_funnel_element(FunnelObject $funnel_object) : DatabaseRes
 				'button_text' => $funnel_object->button_text
 			)
 		);
-		if($db_response === false) {
+		if ($db_response === false) {
 			throw new Exception('Database error');
 		}
-
 	} catch (Exception $e) {
 		return new DatabaseResponse('error', $e->getMessage());
 	}
 	return new DatabaseResponse('success', 'Funnel element submitted');
 }
 
-function wps_db_get_current_funnel() : DatabaseResponse {
+function wps_db_disable_all_funnel_element()
+{
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'funnel_object_database';
+	try {
+		//change elements to false
+		$wpdb->update(
+			$table_name,
+			array(
+				'active' => false
+			),
+			array(
+				'active' => true
+			)
+		);
+	} catch (Exception $e) {
+		return new DatabaseResponse('error', $e->getMessage());
+	}
+	return new DatabaseResponse('success', 'All funnel elements disabled');
+}
+
+function wps_db_update_funnel_element(FunnelObject $funnel_obj): DatabaseResponse
+{
+	if ($funnel_obj->id === -1) {
+		//if somehow the funnel_obj is a new funnel
+		return wps_db_submit_funnel_element($funnel_obj);
+	}
+
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'funnel_object_database';
+	try {
+		$db_response = $wpdb->update(
+			$table_name,
+			array(
+				'funnel_message' => $funnel_obj->message,
+				'active' => $funnel_obj->active,
+				'phone' => $funnel_obj->phone,
+				'hero_image' => $funnel_obj->hero_image,
+				'header_icon' => $funnel_obj->header_icon,
+				'header_text' => $funnel_obj->header_text,
+				'header_subtext' => $funnel_obj->header_subtext,
+				'button_text' => $funnel_obj->button_text
+			),
+			array(
+				'id' => $funnel_obj->id
+			)
+		);
+		if ($db_response === false) {
+			throw new Exception('Database error');
+		}
+	} catch (Exception $e) {
+		return new DatabaseResponse('error', $e->getMessage());
+	}
+	return new DatabaseResponse('success', 'Funnel element updated');
+}
+
+function wps_db_get_current_funnel(): DatabaseResponse
+{
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_object_database';
 	try {
@@ -211,24 +276,26 @@ function wps_db_get_current_funnel() : DatabaseResponse {
 	return new DatabaseResponse('success', $funnel_element);
 }
 
-function wps_db_get_funnel_by_id($funnel_id): DatabaseResponse {
+function wps_db_get_funnel_by_id($funnel_id): DatabaseResponse
+{
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_object_database';
-	
+
 	try {
-			$funnel_element = $wpdb->get_row("SELECT * FROM $table_name WHERE id = $funnel_id");
-			
-			if ($funnel_element === null) {
-					throw new Exception('No funnel element');
-			}
-			
-			return new DatabaseResponse('success', $funnel_element);
+		$funnel_element = $wpdb->get_row("SELECT * FROM $table_name WHERE id = $funnel_id");
+
+		if ($funnel_element === null) {
+			throw new Exception('No funnel element');
+		}
+
+		return new DatabaseResponse('success', $funnel_element);
 	} catch (Exception $e) {
-			return new DatabaseResponse('error', $e->getMessage());
+		return new DatabaseResponse('error', $e->getMessage());
 	}
 }
 
-function wps_db_get_funnels() : DatabaseResponse {
+function wps_db_get_funnels(): DatabaseResponse
+{
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_object_database';
 	try {
@@ -242,7 +309,8 @@ function wps_db_get_funnels() : DatabaseResponse {
 	return new DatabaseResponse('success', $funnel_elements);
 }
 
-function wps_db_set_funnel_active($funnel_id) : DatabaseResponse {
+function wps_db_set_funnel_active($funnel_id): DatabaseResponse
+{
 	//check if the funnel element exists
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_object_database';
@@ -276,4 +344,3 @@ function wps_db_set_funnel_active($funnel_id) : DatabaseResponse {
 		return new DatabaseResponse('error', $e->getMessage());
 	}
 }
-

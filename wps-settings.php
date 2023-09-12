@@ -57,8 +57,11 @@ function funnel_plugin_create_page()
 	if (isset($_POST['submit_funnel'])) {
 		$funnel_message = $_POST['funnel_message'];
 		//convert post into a funnel object
+
+		//check if funnel_id is set, if so then set it to $funnel_id if not set it to -1
+		$funnel_id = $_POST['funnel_id'] ?? -1;
 		$funnel_obj = new FunnelObject(
-			-1,
+			$funnel_id,
 			$funnel_message,
 			isset($_POST['active']),
 			isset($_POST['phone']),
@@ -69,7 +72,14 @@ function funnel_plugin_create_page()
 			$_POST['button_text']
 		);
 		//submit also updates
-		$db_response = wps_db_submit_funnel_element($funnel_obj);
+		$db_response = new DatabaseResponse('error', 'No funnel id set');
+
+		if ($funnel_id === -1) {
+			$db_response = wps_db_submit_funnel_element($funnel_obj);
+		} else {
+
+			$db_response = wps_db_update_funnel_element($funnel_obj);
+		}
 		if ($db_response->status === 'error') {
 			echo $db_response->message;
 			return;
@@ -98,13 +108,24 @@ function funnel_plugin_create_page()
 		//print out the funnel_obj in js
 		echo '<script>console.log(' . json_encode($funnel_obj) . ');</script>';
 	} else {
-		//do nothing
 		$funnel_obj = new FunnelObject(-1, '', false, false, -1, -1, '', '', '');
 	}
-
 ?>
 	<h1>Submit Funnel Element</h1>
+
+	<?php
+	if ($funnel_obj->id === -1) {
+		echo '<span>Creating New Funnel</span>';
+	} else {
+		echo '<span>Editing Funnel : ' . $funnel_obj->message . '</span>';
+	}
+	?>
+
 	<form method="post" action="" class="flex column gap-1 media-page">
+
+		<!-- Handle ID of funnel for POST request -->
+		<input type="hidden" name="funnel_id" value="<?php echo $funnel_obj->id ?>">
+
 		<!-- Handle all data types in FunnelObject  -->
 		<div class="content-container flex column gap-1">
 			<h2>Funnel Properties</h2>
@@ -158,24 +179,24 @@ function funnel_plugin_create_page()
 			<div class="flex align-center gap-05">
 				<!-- header text -->
 				<label>Header Text</label>
-				<input type="text" name="header_text">
+				<input type="text" name="header_text" value="<?php echo '' . $funnel_obj->header_text ?>">
 			</div>
 
 			<div class="flex align-center gap-05">
 				<!-- header subtext -->
 				<label>Header Subtext</label>
-				<input type="text" name="header_subtext">
+				<input type="text" name="header_subtext" value="<?php echo '' . $funnel_obj->header_subtext ?>">
 			</div>
 
 			<div class="flex align-center gap-05">
 				<!-- button text -->
 				<label>Button Text</label>
-				<input type="text" name="button_text">
+				<input type="text" name="button_text" value="<?php echo $funnel_obj->button_text ?>">
 			</div>
 		</div>
 
 
-		<?php submit_button("Create Funnel", "primary", "submit_funnel"); ?>
+		<?php submit_button($funnel_obj->id === -1 ? "Create Funnel" : "Save Funnel", "primary", "submit_funnel"); ?>
 	</form>
 <?php
 }
@@ -191,7 +212,10 @@ function funnel_plugin_manage_page()
 	}
 	if (isset($_POST['submit_funnel_change'])) {
 		$funnel_id = $_POST['funnel_id'];
-		$db_response = wps_db_set_funnel_active($funnel_id);
+		if ($funnel_id === '-1') {
+			$db_response = wps_db_disable_all_funnel_element();
+		} else
+			$db_response = wps_db_set_funnel_active($funnel_id);
 		if ($db_response->status === 'error') {
 			echo $db_response->message;
 			return;
@@ -208,6 +232,7 @@ function funnel_plugin_manage_page()
 					<th>Funnel Message</th>
 					<th>Activate</th>
 					<th>View Details</th>
+					<th>Edit</th>
 					<!-- Add more column headers as needed -->
 				</tr>
 			</thead>
@@ -222,7 +247,8 @@ function funnel_plugin_manage_page()
 						<td>
 							<form method="post" action="">
 								<?php if ($funnel->active) : ?>
-									<button class="button disabled">Already Active</button>
+									<input type="hidden" name="funnel_id" value="-1">
+									<button class="button primary" type="submit" name="submit_funnel_change">Deactivate</button>
 								<?php else : ?>
 									<input type="hidden" name="funnel_id" value="<?php echo esc_attr($funnel->id); ?>">
 									<button class="button" type="submit" name="submit_funnel_change">Activate</button>
@@ -231,6 +257,9 @@ function funnel_plugin_manage_page()
 						</td>
 						<td>
 							<button class="button" onclick="window.location.href='<?php echo esc_url(admin_url('admin.php?page=view-funnel-data-elements&funnel_id=' . $funnel->id)); ?>'">View Data</button>
+						</td>
+						<td>
+							<button class="button" onclick="window.location.href='<?php echo esc_url(admin_url('admin.php?page=create-funnel-element&funnel_id=' . $funnel->id)); ?>'">Edit</button>
 						</td>
 					</tr>
 				<?php endforeach; ?>
@@ -245,7 +274,7 @@ function funnel_plugin_manage_page()
 
 function funnel_plugin_data_page()
 {
-	$db_response = new DatabaseResponse('fail', 'No funnel id set');
+	$db_response = new DatabaseResponse('error', 'No funnel id set');
 	$is_all = false;
 	$funnel_name = "_";
 	if (!isset($_GET['funnel_id'])) {
@@ -288,7 +317,6 @@ function funnel_plugin_data_page()
 				<?php
 				//write for loop using $db_response, treat it as an array of {active:boolean, funnel_message:string}
 				foreach ($funnel_data as $funnel) :
-
 				?>
 					<tr style="box-sizing: border-box;">
 						<td><?php echo esc_html($funnel->funnel_id); ?></td>
