@@ -79,8 +79,7 @@ function funnel_plugin_create_page()
 			$db_response = wps_db_submit_funnel_element($funnel_obj);
 			//redirect to view-funnel-data-elements
 			if ($db_response->status === 'success') {
-				$funnel_id = $db_response->message;
-				echo '<script>window.location.href="' . esc_url(admin_url('admin.php?page=view-funnel-data-elements&funnel_id=' . $funnel_id)) . '";</script>';
+				echo '<script>window.location.href="' . esc_url(admin_url('admin.php?page=manage-funnel-data-elements')) . '";</script>';
 			}
 		} else {
 			$db_response = wps_db_update_funnel_element($funnel_obj);
