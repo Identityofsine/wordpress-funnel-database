@@ -50,7 +50,7 @@ function wps_rest_handle_request($wp)
 function wps_get_image_path($image_id)
 {
 	//get request, grab the current funnel element by DB_Command
-	$image_src = wp_get_attachment_image_src($image_id);
+	$image_src = wp_get_attachment_image_src($image_id, 'large');
 	return $image_src;
 }
 
@@ -78,4 +78,3 @@ function wps_rest_get_current_funnel_element($wp)
 	wp_send_json(['status' => $db_response->status, 'data' => $db_response->message]);
 	exit();
 }
-
