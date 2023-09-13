@@ -220,6 +220,13 @@ function funnel_plugin_manage_page()
 			echo $db_response->message;
 			return;
 		}
+	} else if (isset($_POST['delete_funnel'])) {
+		$funnel_id = $_POST['funnel_id'];
+		$db_response = wps_db_drop_funnel_element($funnel_id);
+		if ($db_response->status === 'error') {
+			echo $db_response->message;
+			return;
+		}
 	}
 	$db_response = (array)wps_db_get_funnels()->message;
 ?>
@@ -233,6 +240,7 @@ function funnel_plugin_manage_page()
 					<th>Activate</th>
 					<th>View Details</th>
 					<th>Edit</th>
+					<th>Delete</th>
 					<!-- Add more column headers as needed -->
 				</tr>
 			</thead>
@@ -261,6 +269,11 @@ function funnel_plugin_manage_page()
 						<td>
 							<button class="button" onclick="window.location.href='<?php echo esc_url(admin_url('admin.php?page=create-funnel-element&funnel_id=' . $funnel->id)); ?>'">Edit</button>
 						</td>
+						<td>
+							<form method="post" action="">
+								<input type="hidden" name="funnel_id" value="<?php echo esc_attr($funnel->id); ?>">
+								<button class="button primary red" type="submit" name="delete_funnel" style="background-color: #fe6d73; color:white;">Delete</button>
+							</form>
 					</tr>
 				<?php endforeach; ?>
 			</tbody>
