@@ -74,10 +74,15 @@ function funnel_plugin_create_page()
 		//submit also updates
 		$db_response = new DatabaseResponse('error', 'No funnel id set');
 
-		if ($funnel_id === -1) {
+		//check $funnel_id as it if were a string, not int
+		if ($funnel_id === '-1') {
 			$db_response = wps_db_submit_funnel_element($funnel_obj);
+			//redirect to view-funnel-data-elements
+			if ($db_response->status === 'success') {
+				$funnel_id = $db_response->message;
+				echo '<script>window.location.href="' . esc_url(admin_url('admin.php?page=view-funnel-data-elements&funnel_id=' . $funnel_id)) . '";</script>';
+			}
 		} else {
-
 			$db_response = wps_db_update_funnel_element($funnel_obj);
 		}
 		if ($db_response->status === 'error') {
