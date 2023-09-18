@@ -84,7 +84,7 @@ function wps_db_submit_phone_number($funnel_id, $funnel_message, $phone_number):
 		);
 		//throw error if DB error happens
 		if ($db_response === false) {
-			throw new Exception('Database error');
+			throw new Exception('Database error: ' . $wpdb->last_error);;
 		}
 	} catch (Exception $e) {
 		return new DatabaseResponse('error', $e->getMessage());
@@ -183,7 +183,7 @@ function wps_db_submit_funnel_element(FunnelObject $funnel_object): DatabaseResp
 			)
 		);
 		if ($db_response === false) {
-			throw new Exception('Database error');
+			throw new Exception('Database error: ' . $wpdb->last_error);;
 		}
 	} catch (Exception $e) {
 		return new DatabaseResponse('error', $e->getMessage());
@@ -203,7 +203,7 @@ function wps_db_drop_funnel_element($funnel_id): DatabaseResponse
 			)
 		);
 		if ($db_response === false) {
-			throw new Exception('Database error');
+			throw new Exception('Database error: ' . $wpdb->last_error);;
 		}
 	} catch (Exception $e) {
 		return new DatabaseResponse('error', $e->getMessage());
@@ -259,7 +259,7 @@ function wps_db_update_funnel_element(FunnelObject $funnel_obj): DatabaseRespons
 			)
 		);
 		if ($db_response === false) {
-			throw new Exception('Database error');
+			throw new Exception('Database error: ' . $wpdb->last_error);
 		}
 	} catch (Exception $e) {
 		return new DatabaseResponse('error', $e->getMessage());
