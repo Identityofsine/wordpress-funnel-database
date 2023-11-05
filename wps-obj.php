@@ -26,9 +26,10 @@ class FunnelObject
 	public $header_text;
 	public $header_subtext;
 	public $button_text;
+	public $send_message;
 
 	//-1 id = new object
-	public function __construct($id = -1, $message = '', $active = true, $phone = true, $hero_image = '', $header_icon = '', $header_text = '', $header_subtext = '', $button_text = '')
+	public function __construct($id = -1, $message = '', $active = true, $phone = true, $hero_image = '', $header_icon = '', $header_text = '', $header_subtext = '', $button_text = '', $send_message = '')
 	{
 		$this->id = $id;
 		$this->message = $message;
@@ -39,6 +40,7 @@ class FunnelObject
 		$this->header_text = FunnelObject::clear_backslashes($header_text);
 		$this->header_subtext = FunnelObject::clear_backslashes($header_subtext);
 		$this->button_text = FunnelObject::clear_backslashes($button_text);
+		$this->send_message = FunnelObject::clear_backslashes($send_message);
 	}
 
 	public static function clear_backslashes($string)
@@ -46,4 +48,3 @@ class FunnelObject
 		return str_replace('\\', '', $string);
 	}
 }
-

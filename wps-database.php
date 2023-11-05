@@ -26,7 +26,8 @@ function init_funnel_database()
 		funnel_email varchar(255) ,
 		funnel_phone varchar(255) ,
 		funnel_date timestamp DEFAULT CURRENT_TIMESTAMP,
-		PRIMARY KEY (id)
+		PRIMARY KEY (id),
+		FOREIGN KEY (funnel_id) REFERENCES wp_funnel_object_database(id)
 	) $charset_collate;";
 
 	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -50,6 +51,7 @@ function init_funnel_object_database()
 		header_text varchar(255),
 		header_subtext varchar(255),
 		button_text varchar(255),
+		message BLOB,
 		PRIMARY KEY (id)
 	) $charset_collate;";
 
