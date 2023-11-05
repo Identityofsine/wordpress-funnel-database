@@ -29,21 +29,20 @@ function wps_rest_handle_request($wp)
 
 	try {
 		//create a variable that holds the response
-		if (isset($wp['phonenumber'])) {
+		if (isset($wp['phonenumber']) && $wp['phonenumber'] !== '') {
 			$response = wps_db_submit_phone_number($wp['funnel_id'], $wp['funnel_message'], $wp['phonenumber']);
-		}
-		if (isset($wp['email'])) {
+		} else if (isset($wp['email']) && $wp['email'] !== '') {
 			$response = wps_db_submit_email($wp['funnel_id'], $wp['funnel_message'], $wp['email']);
-		}
-		if (!isset($wp['phonenumber']) && !isset($wp['email'])) {
-			throw new Exception('No number or email set');
+		} else {
+			wp_send_json(['status' => 'error', 'message' => 'No email or number set'], 500);
+			exit();
 		}
 	} catch (Exception $e) {
-		wp_send_json(['status' => 'error', 'message' => $e->getMessage()]);
+		wp_send_json(['status' => 'error', 'message' => $e->getMessage()], 500);
 		exit();
 	}
 
-	wp_send_json(['status' => $response->status, 'message' => $response->message]);
+	wp_send_json(['status' => $response->status, 'message' => $response->message], 200);
 	exit();
 }
 

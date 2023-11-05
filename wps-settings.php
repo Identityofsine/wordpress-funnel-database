@@ -157,7 +157,8 @@ function funnel_plugin_create_page()
 			$_POST['id-header-icon'],
 			$_POST['header_text'],
 			$_POST['header_subtext'],
-			$_POST['button_text']
+			$_POST['button_text'],
+			$_POST['message_text']
 		);
 		//submit also updates
 		$db_response = new DatabaseResponse('error', 'No funnel id set');
@@ -185,6 +186,8 @@ function funnel_plugin_create_page()
 			echo $db_response->message;
 			return;
 		}
+
+		echo '<script>console.log(' . json_encode($db_response) . ');</script>';
 		//cast $db_response->message to FunnelObject
 		$funnel_obj = new FunnelObject(
 			$db_response->message->id,
@@ -195,7 +198,8 @@ function funnel_plugin_create_page()
 			$db_response->message->header_icon,
 			$db_response->message->header_text,
 			$db_response->message->header_subtext,
-			$db_response->message->button_text
+			$db_response->message->button_text,
+			$db_response->message->message
 		);
 		//print out the funnel_obj in js
 		echo '<script>console.log(' . json_encode($funnel_obj) . ');</script>';
@@ -290,7 +294,7 @@ function funnel_plugin_create_page()
 				<div class="flex gap-05 column">
 					<!-- submit button -->
 					<label>Message Text</label>
-					<textarea name="message_text" cols="30" rows="10" value="<?php echo $funnel_obj->send_message ?>"></textarea>
+					<textarea name="message_text" cols="30" rows="10" value=""><?php echo $funnel_obj->send_message ?></textarea>
 				</div>
 			</div>
 

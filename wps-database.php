@@ -28,6 +28,8 @@ function init_funnel_database()
 		funnel_phone varchar(255) ,
 		funnel_date timestamp DEFAULT CURRENT_TIMESTAMP,
 		funnel_sent boolean NOT NULL DEFAULT FALSE,
+		CONSTRAINT unique_pair_1 UNIQUE (funnel_id, funnel_phone),
+		CONSTRAINT unique_pair_2 UNIQUE (funnel_id, funnel_email),
 		PRIMARY KEY (id),
 		FOREIGN KEY (funnel_id) REFERENCES wp_funnel_object_database(id)
 	) $charset_collate;";
@@ -76,6 +78,11 @@ function wps_db_submit_phone_number($funnel_id, $funnel_message, $phone_number):
 {
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_database';
+	if (!is_numeric($phone_number)) {
+
+		return new DatabaseResponse('error', 'Phone number is not valid');
+	}
+
 	try {
 		$db_response = $wpdb->insert(
 			$table_name,
@@ -86,6 +93,11 @@ function wps_db_submit_phone_number($funnel_id, $funnel_message, $phone_number):
 			)
 		);
 
+		//throw error if DB error happens
+		if ($db_response === false) {
+			throw new Exception('Database error: ' . $wpdb->last_error);
+		}
+
 		//grab the id of the last inserted row
 		$last_id = $wpdb->insert_id;
 
@@ -94,11 +106,6 @@ function wps_db_submit_phone_number($funnel_id, $funnel_message, $phone_number):
 
 		if ($funnel_object->status === 'error') {
 			throw new Exception($funnel_object->message);
-		}
-
-		//throw error if DB error happens
-		if ($db_response === false) {
-			throw new Exception('Database error: ' . $wpdb->last_error);
 		}
 	} catch (Exception $e) {
 		return new DatabaseResponse('error', $e->getMessage());
@@ -267,7 +274,8 @@ function wps_db_update_funnel_element(FunnelObject $funnel_obj): DatabaseRespons
 				'header_icon' => $funnel_obj->header_icon,
 				'header_text' => $funnel_obj->header_text,
 				'header_subtext' => $funnel_obj->header_subtext,
-				'button_text' => $funnel_obj->button_text
+				'button_text' => $funnel_obj->button_text,
+				'message' => $funnel_obj->send_message
 			),
 			array(
 				'id' => $funnel_obj->id
@@ -413,7 +421,7 @@ function wps_db_send_text($insert_id): DatabaseResponse
 	$db_response = $wpdb->update(
 		$table_name,
 		array(
-			'sent' => true
+			'funnel_sent' => true
 		),
 		array(
 			'id' => $insert_id
