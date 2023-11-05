@@ -1,6 +1,7 @@
 <?php
 
 
+require_once('wps-twilio.php');
 //run function on install
 
 
@@ -366,4 +367,37 @@ function wps_db_set_funnel_active($funnel_id): DatabaseResponse
 	} catch (Exception $e) {
 		return new DatabaseResponse('error', $e->getMessage());
 	}
+}
+
+function wps_db_send_text($insert_id): DatabaseResponse
+{
+	//grab database record from wp_funnel_database
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'funnel_database';
+
+	$funnel_data = $wpdb->get_row("SELECT * FROM $table_name WHERE id = $insert_id");
+
+	if ($funnel_data === null) {
+		return new DatabaseResponse('error', 'No data found');
+	}
+
+	//grab the funnel element from wp_funnel_object_database
+	//USE FOREIGN KEY
+	$funnel_object_table_name = $wpdb->prefix . 'funnel_object_database';
+	$funnel_object = $wpdb->get_row("SELECT * FROM $funnel_object_table_name WHERE id = $funnel_data->funnel_id");
+
+	if ($funnel_object === null) {
+		return new DatabaseResponse('error', 'No funnel object found');
+	}
+
+	//send text
+	$twilio_response = send_twilio_message($funnel_data->funnel_phone, $funnel_object->funnel_message);
+
+	//status check
+	if ($twilio_response->status === 'error') {
+		return new DatabaseResponse('error', $twilio_response->message);
+	}
+
+	//return 
+	return new DatabaseResponse('success', 'Text sent');
 }
