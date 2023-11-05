@@ -181,7 +181,8 @@ function wps_db_submit_funnel_element(FunnelObject $funnel_object): DatabaseResp
 				'header_icon' => $funnel_object->header_icon,
 				'header_text' => $funnel_object->header_text,
 				'header_subtext' => $funnel_object->header_subtext,
-				'button_text' => $funnel_object->button_text
+				'button_text' => $funnel_object->button_text,
+				'message' => $funnel_object->message
 			)
 		);
 		if ($db_response === false) {
