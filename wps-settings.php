@@ -81,7 +81,6 @@ function twilio_settings_fields()
 	add_settings_field('twilio_auth_token', 'Twilio Auth Token', 'funnel_plugin_setting_auth_token', 'twilio_settings_page', 'twilio_settings_section');
 	add_settings_field('twilio_phone_number', 'Twilio Phone Number', 'funnel_plugin_setting_auth_token', 'twilio_settings_page', 'twilio_settings_section');
 }
-}
 
 add_action('admin_menu', 'twilio_settings_fields');
 
@@ -119,6 +118,19 @@ function funnel_plugin_setting_auth_token()
 			<!-- header icon -->
 			<div class="flex align-bottom gap-1">
 				<input type="text" name="twilio_auth_token" value="<?php echo $twillo_auth_token ?>">
+			</div>
+		</div>
+	<?php
+}
+
+function funnel_plugin_setting_phone_number()
+{
+	$twillo_phone_number = get_option('twilio_phone_number', false);
+	?>
+		<div class="flex column gap-1">
+			<!-- header icon -->
+			<div class="flex align-bottom gap-1">
+				<input type="text" name="twilio_phone_number" value="<?php echo $twillo_phone_number ?>">
 			</div>
 		</div>
 	<?php
