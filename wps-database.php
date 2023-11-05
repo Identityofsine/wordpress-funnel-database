@@ -26,6 +26,7 @@ function init_funnel_database()
 		funnel_email varchar(255) ,
 		funnel_phone varchar(255) ,
 		funnel_date timestamp DEFAULT CURRENT_TIMESTAMP,
+		funnel_sent boolean NOT NULL DEFAULT FALSE,
 		PRIMARY KEY (id),
 		FOREIGN KEY (funnel_id) REFERENCES wp_funnel_object_database(id)
 	) $charset_collate;";
@@ -51,7 +52,7 @@ function init_funnel_object_database()
 		header_text varchar(255),
 		header_subtext varchar(255),
 		button_text varchar(255),
-		message BLOB,
+		message BLOB DEFAULT '',
 		PRIMARY KEY (id)
 	) $charset_collate;";
 
@@ -69,10 +70,9 @@ function wps_funnel_database_uninstall()
 }
 
 
-//submi
+//submit
 function wps_db_submit_phone_number($funnel_id, $funnel_message, $phone_number): DatabaseResponse
 {
-
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_database';
 	try {
@@ -86,7 +86,7 @@ function wps_db_submit_phone_number($funnel_id, $funnel_message, $phone_number):
 		);
 		//throw error if DB error happens
 		if ($db_response === false) {
-			throw new Exception('Database error: ' . $wpdb->last_error);;
+			throw new Exception('Database error: ' . $wpdb->last_error);
 		}
 	} catch (Exception $e) {
 		return new DatabaseResponse('error', $e->getMessage());

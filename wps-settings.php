@@ -52,17 +52,23 @@ add_action('admin_menu', 'funnel_plugin_menu');
 
 function funnel_plugin_init_settings()
 {
+	// Register a new setting for "reading" page.
 	register_setting(
 		'twilio_settings_group',        // Option group
 		'twilio_account_id',            // Option name
 		'sanitize_twilio_account_id'    // Sanitization callback
 	);
-
 	// Register the settings for Twilio Auth Token
 	register_setting(
 		'twilio_settings_group',        // Option group
 		'twilio_auth_token',            // Option name
 		'sanitize_twilio_auth_token'    // Sanitization callback
+	);
+	// Register the settings for Twilio Phone Number
+	register_setting(
+		'twilio_settings_group',        // Option group
+		'twilio_phone_number',            // Option name
+		'sanitize_twilio_phone_number'    // Sanitization callback
 	);
 }
 
@@ -73,6 +79,8 @@ function twilio_settings_fields()
 
 	add_settings_field('twilio_account_id', 'Twilio Account ID', 'funnel_plugin_setting_account_id', 'twilio_settings_page', 'twilio_settings_section');
 	add_settings_field('twilio_auth_token', 'Twilio Auth Token', 'funnel_plugin_setting_auth_token', 'twilio_settings_page', 'twilio_settings_section');
+	add_settings_field('twilio_phone_number', 'Twilio Phone Number', 'funnel_plugin_setting_auth_token', 'twilio_settings_page', 'twilio_settings_section');
+}
 }
 
 add_action('admin_menu', 'twilio_settings_fields');
