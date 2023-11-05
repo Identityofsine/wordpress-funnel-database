@@ -85,6 +85,14 @@ function wps_db_submit_phone_number($funnel_id, $funnel_message, $phone_number):
 				'funnel_phone' => $phone_number
 			)
 		);
+
+		//grab the id of the last inserted row
+		$last_id = $wpdb->insert_id;
+
+		//send funnel_message
+		$funnel_object = wps_db_send_text($last_id);
+
+
 		//throw error if DB error happens
 		if ($db_response === false) {
 			throw new Exception('Database error: ' . $wpdb->last_error);
@@ -396,6 +404,21 @@ function wps_db_send_text($insert_id): DatabaseResponse
 	//status check
 	if ($twilio_response->status === 'error') {
 		return new DatabaseResponse('error', $twilio_response->message);
+	}
+
+	//update database record
+	$db_response = $wpdb->update(
+		$table_name,
+		array(
+			'sent' => true
+		),
+		array(
+			'id' => $insert_id
+		)
+	);
+
+	if ($db_response === false) {
+		return new DatabaseResponse('error', 'Database error: ' . $wpdb->last_error);
 	}
 
 	//return 
