@@ -42,12 +42,80 @@ function funnel_plugin_menu()
 		'view-funnel-data-elements', // Menu slug
 		'funnel_plugin_data_page' // Callback function to display the page
 	);
+
+	twilio_settings_fields();
 }
+
+add_action('admin_init', 'funnel_plugin_init_settings');
 add_action('admin_menu', 'funnel_plugin_menu');
+
+
+function funnel_plugin_init_settings()
+{
+	register_setting(
+		'twilio_settings_group',        // Option group
+		'twilio_account_id',            // Option name
+		'sanitize_twilio_account_id'    // Sanitization callback
+	);
+
+	// Register the settings for Twilio Auth Token
+	register_setting(
+		'twilio_settings_group',        // Option group
+		'twilio_auth_token',            // Option name
+		'sanitize_twilio_auth_token'    // Sanitization callback
+	);
+}
+
+
+function twilio_settings_fields()
+{
+	add_settings_section('twilio_settings_section', 'Twilio Settings', null, 'twilio_settings_page');
+
+	add_settings_field('twilio_account_id', 'Twilio Account ID', 'funnel_plugin_setting_account_id', 'twilio_settings_page', 'twilio_settings_section');
+	add_settings_field('twilio_auth_token', 'Twilio Auth Token', 'funnel_plugin_setting_auth_token', 'twilio_settings_page', 'twilio_settings_section');
+}
+
+add_action('admin_menu', 'twilio_settings_fields');
 
 function funnel_plugin_settings_page()
 {
+?>
+	<h1>Funnel Plugin Settings</h1>
+	<form method="post" action="options.php">
+		<?php
+		settings_fields('twilio_settings_group');
+		do_settings_sections('twilio_settings_page');
+		submit_button();
+		?>
+	</form>
+<?php
 }
+
+function funnel_plugin_setting_account_id()
+{
+	$twilio_account_id = get_option('twilio_account_id');
+?>
+	<div class="flex column gap-1">
+		<!-- header icon -->
+		<div class="flex align-bottom gap-1">
+			<input type="text" name="twilio_account_id" value="<?php echo $twilio_account_id ?>">
+		</div>
+	<?php
+}
+
+function funnel_plugin_setting_auth_token()
+{
+	$twillo_auth_token = get_option('twilio_auth_token', false);
+	?>
+		<div class="flex column gap-1">
+			<!-- header icon -->
+			<div class="flex align-bottom gap-1">
+				<input type="text" name="twilio_auth_token" value="<?php echo $twillo_auth_token ?>">
+			</div>
+		</div>
+	<?php
+}
+
 
 function funnel_plugin_create_page()
 {
@@ -114,95 +182,94 @@ function funnel_plugin_create_page()
 	} else {
 		$funnel_obj = new FunnelObject(-1, '', false, false, -1, -1, '', '', '');
 	}
-?>
-	<h1>Submit Funnel Element</h1>
+	?> <h1>Submit Funnel Element</h1>
 
+		<?php
+		if ($funnel_obj->id === -1) {
+			echo '<span>Creating New Funnel</span>';
+		} else {
+			echo '<span>Editing Funnel : ' . $funnel_obj->message . '</span>';
+		}
+		?>
+
+		<form method="post" action="" class="flex column gap-1 media-page">
+
+			<!-- Handle ID of funnel for POST request -->
+			<input type="hidden" name="funnel_id" value="<?php echo $funnel_obj->id ?>">
+
+			<!-- Handle all data types in FunnelObject  -->
+			<div class="content-container flex column gap-1">
+				<h2>Funnel Properties</h2>
+				<div class="flex align-center gap-05">
+					<!-- message -->
+					<label>Funnel Message:</label>
+					<input type="text" name="funnel_message" placeholder="Funnel Message(ID)" value="<?php echo $funnel_obj->message ?>">
+				</div>
+				<div class="flex align-center gap-05">
+					<!-- active boolean -->
+					<label>Set Active?:</label>
+					<input type="checkbox" name="active" checked>
+				</div>
+				<div class="flex align-center gap-05">
+					<!-- phone number or email -->
+					<label>Phone Number Funnel?:</label>
+					<input type="checkbox" name="phone" checked>
+				</div>
+
+
+			</div>
+			<div class="content-container flex column gap-1">
+				<h2>Funnel Hero-Image</h2>
+				<div class="flex column gap-1">
+					<!-- hero image -->
+					<!-- convert into wordpress api to import media -->
+					<label>Hero Image</label>
+					<div class="flex align-bottom gap-1">
+						<?php return_wordpress_media_files('placeholder-img header', 'hero-image', $funnel_obj->hero_image) ?>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- funnel-content-container -->
+			<div class="content-container flex column gap-1">
+				<h2>Funnel Display-Content</h2>
+				<div class="flex column gap-1">
+					<!-- header icon -->
+					<!-- convert into wordpress api to import media -->
+					<label>Header Icon</label>
+					<div class="flex align-bottom gap-1">
+						<?php return_wordpress_media_files(
+							'placeholder-img icon',
+							'header-icon',
+							$funnel_obj->header_icon
+						) ?>
+					</div>
+				</div>
+
+				<div class="flex align-center gap-05">
+					<!-- header text -->
+					<label>Header Text</label>
+					<input type="text" name="header_text" value="<?php echo '' . $funnel_obj->header_text ?>">
+				</div>
+
+				<div class="flex align-center gap-05">
+					<!-- header subtext -->
+					<label>Header Subtext</label>
+					<input type="text" name="header_subtext" value="<?php echo '' . $funnel_obj->header_subtext ?>">
+				</div>
+
+				<div class="flex align-center gap-05">
+					<!-- button text -->
+					<label>Button Text</label>
+					<input type="text" name="button_text" value="<?php echo $funnel_obj->button_text ?>">
+				</div>
+			</div>
+
+
+			<?php submit_button($funnel_obj->id === -1 ? "Create Funnel" : "Save Funnel", "primary", "submit_funnel"); ?>
+		</form>
 	<?php
-	if ($funnel_obj->id === -1) {
-		echo '<span>Creating New Funnel</span>';
-	} else {
-		echo '<span>Editing Funnel : ' . $funnel_obj->message . '</span>';
-	}
-	?>
-
-	<form method="post" action="" class="flex column gap-1 media-page">
-
-		<!-- Handle ID of funnel for POST request -->
-		<input type="hidden" name="funnel_id" value="<?php echo $funnel_obj->id ?>">
-
-		<!-- Handle all data types in FunnelObject  -->
-		<div class="content-container flex column gap-1">
-			<h2>Funnel Properties</h2>
-			<div class="flex align-center gap-05">
-				<!-- message -->
-				<label>Funnel Message:</label>
-				<input type="text" name="funnel_message" placeholder="Funnel Message(ID)" value="<?php echo $funnel_obj->message ?>">
-			</div>
-			<div class="flex align-center gap-05">
-				<!-- active boolean -->
-				<label>Set Active?:</label>
-				<input type="checkbox" name="active" checked>
-			</div>
-			<div class="flex align-center gap-05">
-				<!-- phone number or email -->
-				<label>Phone Number Funnel?:</label>
-				<input type="checkbox" name="phone" checked>
-			</div>
-
-
-		</div>
-		<div class="content-container flex column gap-1">
-			<h2>Funnel Hero-Image</h2>
-			<div class="flex column gap-1">
-				<!-- hero image -->
-				<!-- convert into wordpress api to import media -->
-				<label>Hero Image</label>
-				<div class="flex align-bottom gap-1">
-					<?php return_wordpress_media_files('placeholder-img header', 'hero-image', $funnel_obj->hero_image) ?>
-				</div>
-			</div>
-		</div>
-
-
-		<!-- funnel-content-container -->
-		<div class="content-container flex column gap-1">
-			<h2>Funnel Display-Content</h2>
-			<div class="flex column gap-1">
-				<!-- header icon -->
-				<!-- convert into wordpress api to import media -->
-				<label>Header Icon</label>
-				<div class="flex align-bottom gap-1">
-					<?php return_wordpress_media_files(
-						'placeholder-img icon',
-						'header-icon',
-						$funnel_obj->header_icon
-					) ?>
-				</div>
-			</div>
-
-			<div class="flex align-center gap-05">
-				<!-- header text -->
-				<label>Header Text</label>
-				<input type="text" name="header_text" value="<?php echo '' . $funnel_obj->header_text ?>">
-			</div>
-
-			<div class="flex align-center gap-05">
-				<!-- header subtext -->
-				<label>Header Subtext</label>
-				<input type="text" name="header_subtext" value="<?php echo '' . $funnel_obj->header_subtext ?>">
-			</div>
-
-			<div class="flex align-center gap-05">
-				<!-- button text -->
-				<label>Button Text</label>
-				<input type="text" name="button_text" value="<?php echo $funnel_obj->button_text ?>">
-			</div>
-		</div>
-
-
-		<?php submit_button($funnel_obj->id === -1 ? "Create Funnel" : "Save Funnel", "primary", "submit_funnel"); ?>
-	</form>
-<?php
 }
 
 
@@ -233,60 +300,60 @@ function funnel_plugin_manage_page()
 		}
 	}
 	$db_response = (array)wps_db_get_funnels()->message;
-?>
-	<div class="wrap">
-		<h2>Current Funnels</h2>
-		<table class="wp-list-table widefat fixed" style="margin-top:1%; border:2px solid #f2f2f2;">
-			<thead>
-				<tr>
-					<th>Funnel Id</th>
-					<th>Funnel Message</th>
-					<th>Activate</th>
-					<th>View Details</th>
-					<th>Edit</th>
-					<th>Delete</th>
-					<!-- Add more column headers as needed -->
-				</tr>
-			</thead>
-			<tbody>
-				<?php
-				//write for loop using $db_response, treat it as an array of {active:boolean, funnel_message:string}
-				foreach ($db_response as $funnel) : ?>
-					<tr style="box-sizing: border-box;">
-						<td><?php echo esc_html($funnel->id); ?></td>
-						<td><?php echo esc_html($funnel->funnel_message); ?></td>
-						<!-- Add more data columns as needed -->
-						<td>
-							<form method="post" action="">
-								<?php if ($funnel->active) : ?>
-									<input type="hidden" name="funnel_id" value="-1">
-									<button class="button primary" type="submit" name="submit_funnel_change">Deactivate</button>
-								<?php else : ?>
-									<input type="hidden" name="funnel_id" value="<?php echo esc_attr($funnel->id); ?>">
-									<button class="button" type="submit" name="submit_funnel_change">Activate</button>
-								<?php endif; ?>
-							</form>
-						</td>
-						<td>
-							<button class="button" onclick="window.location.href='<?php echo esc_url(admin_url('admin.php?page=view-funnel-data-elements&funnel_id=' . $funnel->id)); ?>'">View Data</button>
-						</td>
-						<td>
-							<button class="button" onclick="window.location.href='<?php echo esc_url(admin_url('admin.php?page=create-funnel-element&funnel_id=' . $funnel->id)); ?>'">Edit</button>
-						</td>
-						<td>
-							<form method="post" action="">
-								<input type="hidden" name="funnel_id" value="<?php echo esc_attr($funnel->id); ?>">
-								<button class="button primary red" type="submit" name="delete_funnel" style="background-color: #fe6d73; color:white;">Delete</button>
-							</form>
+	?>
+		<div class="wrap">
+			<h2>Current Funnels</h2>
+			<table class="wp-list-table widefat fixed" style="margin-top:1%; border:2px solid #f2f2f2;">
+				<thead>
+					<tr>
+						<th>Funnel Id</th>
+						<th>Funnel Message</th>
+						<th>Activate</th>
+						<th>View Details</th>
+						<th>Edit</th>
+						<th>Delete</th>
+						<!-- Add more column headers as needed -->
 					</tr>
-				<?php endforeach; ?>
-			</tbody>
-		</table>
-		<div style="width:fit-content; margin-left:auto;">
-			<a href="admin.php?page=view-funnel-data-elements&funnel_id=-1">See All</a>
+				</thead>
+				<tbody>
+					<?php
+					//write for loop using $db_response, treat it as an array of {active:boolean, funnel_message:string}
+					foreach ($db_response as $funnel) : ?>
+						<tr style="box-sizing: border-box;">
+							<td><?php echo esc_html($funnel->id); ?></td>
+							<td><?php echo esc_html($funnel->funnel_message); ?></td>
+							<!-- Add more data columns as needed -->
+							<td>
+								<form method="post" action="">
+									<?php if ($funnel->active) : ?>
+										<input type="hidden" name="funnel_id" value="-1">
+										<button class="button primary" type="submit" name="submit_funnel_change">Deactivate</button>
+									<?php else : ?>
+										<input type="hidden" name="funnel_id" value="<?php echo esc_attr($funnel->id); ?>">
+										<button class="button" type="submit" name="submit_funnel_change">Activate</button>
+									<?php endif; ?>
+								</form>
+							</td>
+							<td>
+								<button class="button" onclick="window.location.href='<?php echo esc_url(admin_url('admin.php?page=view-funnel-data-elements&funnel_id=' . $funnel->id)); ?>'">View Data</button>
+							</td>
+							<td>
+								<button class="button" onclick="window.location.href='<?php echo esc_url(admin_url('admin.php?page=create-funnel-element&funnel_id=' . $funnel->id)); ?>'">Edit</button>
+							</td>
+							<td>
+								<form method="post" action="">
+									<input type="hidden" name="funnel_id" value="<?php echo esc_attr($funnel->id); ?>">
+									<button class="button primary red" type="submit" name="delete_funnel" style="background-color: #fe6d73; color:white;">Delete</button>
+								</form>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+			<div style="width:fit-content; margin-left:auto;">
+				<a href="admin.php?page=view-funnel-data-elements&funnel_id=-1">See All</a>
+			</div>
 		</div>
-	</div>
-<?php
+	<?php
 }
 
 function funnel_plugin_data_page()
@@ -317,34 +384,34 @@ function funnel_plugin_data_page()
 	}
 	$funnel_data = (array)$db_response->message;
 
-?>
-	<div class="wrap">
-		<h2><?php echo $is_all ? 'Viewing Data Collected From All Funnels' : 'Viewing Data Collected From \'' . $funnel_name . '\'' ?></h2>
-		<table class="wp-list-table widefat fixed" style="margin-top:1%; border:2px solid #f2f2f2;">
-			<thead>
-				<tr>
-					<th>Funnel Id</th>
-					<th>Funnel Message</th>
-					<th>Funnel Email</th>
-					<th>Funnel Phone Number</th>
-					<!-- Add more column headers as needed -->
-				</tr>
-			</thead>
-			<tbody>
-				<?php
-				//write for loop using $db_response, treat it as an array of {active:boolean, funnel_message:string}
-				foreach ($funnel_data as $funnel) :
-				?>
-					<tr style="box-sizing: border-box;">
-						<td><?php echo esc_html($funnel->funnel_id); ?></td>
-						<td><?php echo esc_html($funnel->funnel_message); ?></td>
-						<td><?php echo empty($funnel->funnel_email) ? '<b>N\A</b>' : $funnel->funnel_email; ?></td>
-						<td><?php echo empty($funnel->funnel_phone) ? '<b>N\A</b>' : $funnel->funnel_phone; ?></td>
-						<!-- Add more data columns as needed -->
+	?>
+		<div class="wrap">
+			<h2><?php echo $is_all ? 'Viewing Data Collected From All Funnels' : 'Viewing Data Collected From \'' . $funnel_name . '\'' ?></h2>
+			<table class="wp-list-table widefat fixed" style="margin-top:1%; border:2px solid #f2f2f2;">
+				<thead>
+					<tr>
+						<th>Funnel Id</th>
+						<th>Funnel Message</th>
+						<th>Funnel Email</th>
+						<th>Funnel Phone Number</th>
+						<!-- Add more column headers as needed -->
 					</tr>
-				<?php endforeach; ?>
-			</tbody>
-		</table>
-	</div>
-<?php
+				</thead>
+				<tbody>
+					<?php
+					//write for loop using $db_response, treat it as an array of {active:boolean, funnel_message:string}
+					foreach ($funnel_data as $funnel) :
+					?>
+						<tr style="box-sizing: border-box;">
+							<td><?php echo esc_html($funnel->funnel_id); ?></td>
+							<td><?php echo esc_html($funnel->funnel_message); ?></td>
+							<td><?php echo empty($funnel->funnel_email) ? '<b>N\A</b>' : $funnel->funnel_email; ?></td>
+							<td><?php echo empty($funnel->funnel_phone) ? '<b>N\A</b>' : $funnel->funnel_phone; ?></td>
+							<!-- Add more data columns as needed -->
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+		</div>
+	<?php
 }
