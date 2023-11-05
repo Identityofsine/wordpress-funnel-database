@@ -79,7 +79,7 @@ function twilio_settings_fields()
 
 	add_settings_field('twilio_account_id', 'Twilio Account ID', 'funnel_plugin_setting_account_id', 'twilio_settings_page', 'twilio_settings_section');
 	add_settings_field('twilio_auth_token', 'Twilio Auth Token', 'funnel_plugin_setting_auth_token', 'twilio_settings_page', 'twilio_settings_section');
-	add_settings_field('twilio_phone_number', 'Twilio Phone Number', 'funnel_plugin_setting_auth_token', 'twilio_settings_page', 'twilio_settings_section');
+	add_settings_field('twilio_phone_number', 'Twilio Phone Number', 'funnel_plugin_setting_phone_number', 'twilio_settings_page', 'twilio_settings_section');
 }
 
 add_action('admin_menu', 'twilio_settings_fields');
