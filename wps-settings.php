@@ -286,6 +286,15 @@ function funnel_plugin_create_page()
 				</div>
 			</div>
 
+			<div class="content-container flex column gap-1">
+				<div class="flex gap-05 column">
+					<!-- submit button -->
+					<label>Message Text</label>
+					<textarea name="message_text" cols="30" rows="10" value="<?php echo $funnel_obj->send_message ?>"></textarea>
+				</div>
+			</div>
+
+
 
 			<?php submit_button($funnel_obj->id === -1 ? "Create Funnel" : "Save Funnel", "primary", "submit_funnel"); ?>
 		</form>

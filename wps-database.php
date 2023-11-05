@@ -194,7 +194,7 @@ function wps_db_submit_funnel_element(FunnelObject $funnel_object): DatabaseResp
 				'header_text' => $funnel_object->header_text,
 				'header_subtext' => $funnel_object->header_subtext,
 				'button_text' => $funnel_object->button_text,
-				'message' => $funnel_object->message
+				'message' => $funnel_object->send_message
 			)
 		);
 		if ($db_response === false) {
@@ -402,7 +402,7 @@ function wps_db_send_text($insert_id): DatabaseResponse
 	}
 
 	//send text
-	$twilio_response = send_twilio_message($funnel_data->funnel_phone, $funnel_object->funnel_message);
+	$twilio_response = send_twilio_message($funnel_data->funnel_phone, $funnel_object->message);
 
 	//status check
 	if ($twilio_response->status === 'error') {
