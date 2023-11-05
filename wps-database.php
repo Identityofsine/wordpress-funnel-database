@@ -92,6 +92,9 @@ function wps_db_submit_phone_number($funnel_id, $funnel_message, $phone_number):
 		//send funnel_message
 		$funnel_object = wps_db_send_text($last_id);
 
+		if ($funnel_object->status === 'error') {
+			throw new Exception($funnel_object->message);
+		}
 
 		//throw error if DB error happens
 		if ($db_response === false) {
