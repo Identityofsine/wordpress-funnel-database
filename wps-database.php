@@ -87,7 +87,9 @@ function wps_funnel_database_uninstall()
 {
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'funnel_database';
+	$table_name_obj = $wpdb->prefix . 'funnel_object_database';
 	$wpdb->query("DROP TABLE IF EXISTS $table_name");
+	$wpdb->query("DROP TABLE IF EXISTS $table_name_obj");
 }
 
 
