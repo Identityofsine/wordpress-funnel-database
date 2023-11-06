@@ -63,6 +63,24 @@ function init_funnel_object_database()
 	dbDelta($sql);
 }
 
+function update_funnel_databases()
+{
+	global $wpdb;
+	$object_table_name = $wpdb->prefix . 'funnel_object_database';
+	$data_table_name = $wpdb->prefix . 'funnel_database';
+
+	//drop the tables
+	$sql = "DROP TABLE IF EXISTS $object_table_name";
+	$sql_2 = "DROP TABLE IF EXISTS $data_table_name";
+
+	$wpdb->query($sql);
+	$wpdb->query($sql_2);
+
+	//create the tables
+	init_funnel_database();
+	init_funnel_object_database();
+}
+
 
 
 function wps_funnel_database_uninstall()
